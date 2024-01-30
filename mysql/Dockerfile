@@ -1,0 +1,7 @@
+FROM mysql:latest
+ENV MYSQL_ROOT_PASSWORD p@ssw0rd
+ENV MYSQL_DATABASE gitbucket
+ENV MYSQL_USER testuser
+ENV MYSQL_PASSWORD testpassword
+EXPOSE 3306
+
