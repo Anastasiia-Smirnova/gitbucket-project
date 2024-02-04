@@ -67,10 +67,10 @@ pipeline {
     post { 
         always {
             echo 'Cleaning...'
-            sh """
-              docker rm -f \$(docker ps -aq)
-              docker rmi -f \$(docker images -q)
-            """
+            //sh """
+            //  docker rm -f \$(docker ps -aq)
+            //  docker rmi -f \$(docker images -q)
+            //"""
         }
         success {
             echo 'This will run only if the pipeline succeeded'
