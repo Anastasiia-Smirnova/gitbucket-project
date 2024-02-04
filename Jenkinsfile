@@ -50,9 +50,9 @@ pipeline {
                 script {
                   def containerId = sh(script: "docker run -itd --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
                   sh """
+                    docker logs ${containerId}
                     sleep 60
                     curl localhost:8080
-                    docker logs ${containerId}
                   """
                 }
             }
