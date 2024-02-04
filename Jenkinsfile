@@ -7,6 +7,10 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
+                sh """
+                  sbt package
+                  sbt build 
+                """
             }
         }
         stage('Test') {
