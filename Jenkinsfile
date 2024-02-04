@@ -9,7 +9,7 @@ pipeline {
                 echo 'Building...'
                 sh """
                   sbt package
-                  sbt build 
+                  sbt executable
                 """
             }
         }
