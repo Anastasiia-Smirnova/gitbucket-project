@@ -38,14 +38,17 @@ pipeline {
         }
         stage('Test Run') {
             steps {
+               echo 'Creating Docker Network...'
+                sh "docker network create test-network"
+
                 echo 'Running MySQL...'
                 sh """
-                  docker run -itd mysql:${BUILD_NUMBER}
+                  docker run -itd --name mysql --network test-network mysql:${BUILD_NUMBER}
                 """
 
                 echo 'Running GitBucket...'
                 sh """
-                  docker run -itd gitbucket:${BUILD_NUMBER}
+                  docker run -itd --name gitbucket --network test-network gitbucket:${BUILD_NUMBER}
                 """
             }
         }
