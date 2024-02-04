@@ -38,8 +38,8 @@ pipeline {
         }
         stage('Test Run') {
             steps {
-               echo 'Creating Docker Network...'
-                sh "docker network create test-network"
+                //echo 'Creating Docker Network...'
+                //sh "docker network create test-network"
 
                 echo 'Running MySQL...'
                 sh """
