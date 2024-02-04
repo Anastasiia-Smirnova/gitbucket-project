@@ -48,7 +48,9 @@ pipeline {
 
                 echo 'Running GitBucket...'
                 sh """
-                  docker run -itd --name gitbucket --network test-network gitbucket:${BUILD_NUMBER}
+                  docker run -itd --name gitbucket --port 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}
+                  sleep 60
+                  curl localhost:8080
                 """
             }
         }
