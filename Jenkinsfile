@@ -23,7 +23,7 @@ pipeline {
             steps {
                 echo 'Building MySQL...'
                 sh """
-                  cd /mysql
+                  cd ./mysql
                   docker build -t mysql:${BUILD_NUMBER} .
                 """
             }
