@@ -23,7 +23,7 @@ pipeline {
             steps {
                 echo 'Building with Docker...'
                 sh """
-                  cd /root/gitbucket-project
+                  cd /root/gitbucket-project/jenkins/workspace/gitbucket-project_main
                   docker build .
                 """
             }
