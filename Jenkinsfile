@@ -43,7 +43,7 @@ pipeline {
 
                 echo 'Running MySQL...'
                 sh """
-                  docker run -itd --name mysql --network test-network mysql:${BUILD_NUMBER}
+                  docker run -itd --name db --network test-network mysql:${BUILD_NUMBER}
                 """
 
                 echo 'Running GitBucket...'
