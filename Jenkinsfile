@@ -42,8 +42,7 @@ pipeline {
                 sh """
                   docker run -itd mysql:${BUILD_NUMBER}
                 """
-            }
-            steps {
+
                 echo 'Running GitBucket...'
                 sh """
                   docker run -itd gitbucket:${BUILD_NUMBER}
