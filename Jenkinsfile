@@ -25,6 +25,8 @@ pipeline {
                 sh """
                   cd /root/gitbucket-project/jenkins/workspace/gitbucket-project_main
                   docker build .
+                  cd /root/gitbucket-project/jenkins/workspace/gitbucket-project_main/mysql
+                  docker build .
                 """
             }
         }
