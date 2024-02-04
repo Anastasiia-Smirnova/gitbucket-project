@@ -19,6 +19,15 @@ pipeline {
                 sh "sbt test"
             }
         }
+        stage('Docker Build') {
+            steps {
+                echo 'Building with Docker...'
+                sh """
+                  cd /root/gitbucket-project
+                  docker build .
+                """
+            }
+        }
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
