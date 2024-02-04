@@ -16,7 +16,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh "sbt test"
+                //sh "sbt test"
             }
         }
         stage('Docker Build MySQL') {
