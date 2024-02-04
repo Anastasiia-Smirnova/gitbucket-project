@@ -9,6 +9,10 @@ pipeline {
                 echo 'Cleaning workspace...'
                 cleanWs()
                 checkout scm
+                sh """
+                docker rm -f \$(docker ps -aq)
+                docker rmi -f \$(docker images -q)
+              """
             }
         }
         stage('Build') {
@@ -73,11 +77,7 @@ pipeline {
 
     post { 
         always {
-            echo 'Cleaning...'
-            sh """
-              docker rm -f \$(docker ps -aq)
-              docker rmi -f \$(docker images -q)
-            """
+            echo 'This will always run'
         }
         success {
             echo 'This will run only if the pipeline succeeded'
