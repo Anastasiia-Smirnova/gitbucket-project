@@ -19,14 +19,34 @@ pipeline {
                 sh "sbt test"
             }
         }
-        stage('Docker Build') {
+        stage('Docker Build MySQL') {
             steps {
-                echo 'Building with Docker...'
+                echo 'Building MySQL...'
                 sh """
-                  cd /root/gitbucket-project/jenkins/workspace/gitbucket-project_main
-                  docker build .
-                  cd /root/gitbucket-project/jenkins/workspace/gitbucket-project_main/mysql
-                  docker build .
+                  cd /mysql
+                  docker build -t mysql:${BUILD_NUMBER} .
+                """
+            }
+        }
+        stage('Docker Build GitBucket') {
+            steps {
+                echo 'Building GitBucket...'
+                sh """
+                  docker build -t gitbucket:${BUILD_NUMBER} .
+                """
+            }
+        }
+        stage('Test Run') {
+            steps {
+                echo 'Running MySQL...'
+                sh """
+                  docker run -itd mysql:${BUILD_NUMBER}
+                """
+            }
+            steps {
+                echo 'Running GitBucket...'
+                sh """
+                  docker run -itd gitbucket:${BUILD_NUMBER}
                 """
             }
         }
