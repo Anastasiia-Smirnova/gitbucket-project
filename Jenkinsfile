@@ -59,7 +59,7 @@ pipeline {
 
                 echo 'Running GitBucket...'
                 script {
-                  def containerId = sh(script: "docker run -itd --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
+                  def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket1 -v /var/lib/mysql/:/var/lib/mysql/ --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
                   sh """
                     docker logs ${containerId}
                     sleep 60
