@@ -52,11 +52,11 @@ pipeline {
                 //echo 'Creating Docker Network...'
                 //sh "docker network create test-network"
 
-                echo 'Running MySQL...'
+                echo 'Running docker compose...'
                 sh """
-                  docker run -itd --name db --network test-network mysql:${BUILD_NUMBER}
+                  docker compose up -d 
                 """
-
+/*
                 echo 'Running GitBucket...'
                 script {
                   def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket -v /var/lib/mysql/:/var/lib/mysql/ --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
@@ -65,7 +65,7 @@ pipeline {
                     sleep 60
                     curl localhost:8080
                   """
-                }
+                }*/
             }
         }
         stage('Deploy') {
