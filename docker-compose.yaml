@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  gitbucket:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      GITBUCKET_HOME: /gitbucket
+    ports:
+      - "8080:8080"
+      - "29418:29418"
+    volumes:
+      - ./gitbucket-data:/gitbucket
+      - /var/lib/mysql/:/var/lib/mysql/
+    depends_on:
+      - db
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: p@ssw0rd
+      MYSQL_DATABASE: gitbucket
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+    ports:
+      - "3306:3306"
+
+volumes:
+  gitbucket-data:
