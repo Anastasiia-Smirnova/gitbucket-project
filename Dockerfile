@@ -6,6 +6,8 @@ RUN ln -s /gitbucket /root/.gitbucket
 
 VOLUME /gitbucket
 
+ENV GITBUCKET_HOME=/gitbucket
+
 # Port for web page and Port for SSH access to git repository (Optional)
 EXPOSE 8080 29418
 
