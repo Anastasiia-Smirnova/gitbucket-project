@@ -66,6 +66,18 @@ pipeline {
                     curl localhost:8080
                   """
                 }
+                script {
+                    withCredentials([string(credentialsId: 'mysql-password', variable: 'MYSQL_PASSWORD')]) {
+                        // Use the MYSQL_ROOT_PASSWORD environment variable in your command
+                        sh """
+                        mysql -u root -p${MYSQL_ROOT_PASSWORD} -e \"
+                        ALTER USER 'testuser'@'%' IDENTIFIED WITH mysql_native_password BY 'testpassword';
+                        GRANT ALL PRIVILEGES ON gitbucket.* TO 'testuser'@'%';
+                        FLUSH PRIVILEGES;
+                        \"
+                        """
+                    }
+                }
             }
         }
         stage('Deploy') {
