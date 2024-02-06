@@ -67,7 +67,7 @@ pipeline {
                   """
                 }
                 script {
-                    withCredentials([string(credentialsId: 'mysql-password', variable: 'MYSQL_PASSWORD')]) {
+                    withCredentials([string(credentialsId: 'mysql-password', variable: 'MYSQL_ROOT_PASSWORD')]) {
                         // Use the MYSQL_ROOT_PASSWORD environment variable in your command
                         sh """
                         mysql -u root -p${MYSQL_ROOT_PASSWORD} -e \"
