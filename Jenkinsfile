@@ -1,3 +1,18 @@
+def submitStatusCheck(String checkName, String state) {
+  withCredentials([string(credentialsId: 'git-token', variable: 'GIT_TOKEN')]) {
+    def commitSHA = env.GIT_COMMIT
+    sh """
+      curl -L \
+      -X POST \
+      -H \"Accept: application/vnd.github+json\" \
+      -H \"Authorization: Bearer ${GIT_TOKEN}\" \
+      -H \"X-GitHub-Api-Version: 2022-11-28\" \
+      https://api.github.com/repos/Anastasiia-Smirnova/gitbucket-project/statuses/${commitSHA} \
+      -d \'{"state":"${state}","target_url":"http://10.26.0.139:9090/job/gitbucket-project/job/main/${BUILD_NUMBER}//build/status","description":"${checkName} stage succeeded!","context":"${checkName}"}\'
+    """
+  }
+}
+
 pipeline {
     agent {
       label 'agent1'
@@ -11,23 +26,35 @@ pipeline {
                 checkout scm
                 sh """
                   docker rm -f \$(docker ps -aq) || echo "No containers found"
-                  docker rmi -f \$(docker images -q)  || echo "No imagess found"
+                  docker rmi -f \$(docker images -q)  || echo "No images found"
                 """
             }
         }
         stage('Build') {
             steps {
+              try {
                 echo 'Building...'
                 sh """
                   sbt package
                   sbt executable
                 """
+                submitStatusCheck('stage/build', 'success')
+              } catch (e) {
+                submitStatusCheck('stage/build', 'failure')
+                throw e
+              }
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing...'
-                //sh "sbt test"
+                try {
+                  echo 'Testing...'
+                  sh "sbt test"
+                  submitStatusCheck('stage/test', 'success')
+                } catch (e) {
+                  submitStatusCheck('stage/test', 'failure')
+                  throw e
+                }
             }
         }
         stage('Docker Build MySQL') {
@@ -49,8 +76,9 @@ pipeline {
         }
         stage('Test Run') {
             steps {
-                //echo 'Creating Docker Network...'
-                //sh "docker network create test-network"
+              try {
+                echo 'Creating Docker Network...'
+                sh "docker network create test-network" || "Docker Network already exists"
 
                 echo 'Running MySQL...'
                 sh """
@@ -78,6 +106,12 @@ pipeline {
                     curl localhost:8080
                   """
                 }
+                submitStatusCheck('stage/test-run', 'success')
+              } catch (e) {
+                submitStatusCheck('stage/test', 'failure')
+                throw e
+              }
+                
             }
         }
         stage('Deploy') {
@@ -98,4 +132,4 @@ pipeline {
             echo 'This will run only if the pipeline failed'
         }
     }
-}
+} 
