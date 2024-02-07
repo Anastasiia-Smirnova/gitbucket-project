@@ -83,7 +83,7 @@ pipeline {
               script {
                 try {
                   echo 'Creating Docker Network...'
-                  sh "docker network create test-network" || "Docker Network already exists"
+                  sh "docker network create test-network || echo 'Docker Network already exists'"
 
                   echo 'Running MySQL...'
                   sh """
