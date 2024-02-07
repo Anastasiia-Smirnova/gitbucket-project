@@ -32,21 +32,24 @@ pipeline {
         }
         stage('Build') {
             steps {
-              try {
-                echo 'Building...'
-                sh """
-                  sbt package
-                  sbt executable
-                """
-                submitStatusCheck('stage/build', 'success')
-              } catch (e) {
-                submitStatusCheck('stage/build', 'failure')
-                throw e
+              script {
+                try {
+                  echo 'Building...'
+                  sh """
+                    sbt package
+                    sbt executable
+                  """
+                  submitStatusCheck('stage/build', 'success')
+                } catch (e) {
+                  submitStatusCheck('stage/build', 'failure')
+                  throw e
+                }
               }
             }
         }
         stage('Test') {
             steps {
+              script {
                 try {
                   echo 'Testing...'
                   sh "sbt test"
@@ -55,6 +58,7 @@ pipeline {
                   submitStatusCheck('stage/test', 'failure')
                   throw e
                 }
+              }     
             }
         }
         stage('Docker Build MySQL') {
@@ -76,7 +80,8 @@ pipeline {
         }
         stage('Test Run') {
             steps {
-              try {
+              script {
+                try {
                 echo 'Creating Docker Network...'
                 sh "docker network create test-network" || "Docker Network already exists"
 
@@ -87,16 +92,16 @@ pipeline {
                 sleep 180
                 echo 'Running GitBucket...'
                 script {
-                    withCredentials([string(credentialsId: 'mysql-password', variable: 'MYSQL_ROOT_PASSWORD')]) {
-                        // Use the MYSQL_ROOT_PASSWORD environment variable in your command
-                        sh """
-                        mysql --host=127.0.0.1 -u root -p${MYSQL_ROOT_PASSWORD} -e \"
-                        ALTER USER 'testuser'@'%' IDENTIFIED WITH mysql_native_password BY 'testpassword1';
-                        GRANT ALL PRIVILEGES ON gitbucket.* TO 'testuser'@'%';
-                        FLUSH PRIVILEGES;
-                        \"
-                        """
-                    }
+                  withCredentials([string(credentialsId: 'mysql-password', variable: 'MYSQL_ROOT_PASSWORD')]) {
+                    // Use the MYSQL_ROOT_PASSWORD environment variable in your command
+                    sh """
+                    mysql --host=127.0.0.1 -u root -p${MYSQL_ROOT_PASSWORD} -e \"
+                    ALTER USER 'testuser'@'%' IDENTIFIED WITH mysql_native_password BY 'testpassword1';
+                    GRANT ALL PRIVILEGES ON gitbucket.* TO 'testuser'@'%';
+                    FLUSH PRIVILEGES;
+                    \"
+                    """
+                  }
                 }
                 script {
                   def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
@@ -107,11 +112,11 @@ pipeline {
                   """
                 }
                 submitStatusCheck('stage/test-run', 'success')
-              } catch (e) {
+                } catch (e) {
                 submitStatusCheck('stage/test', 'failure')
                 throw e
-              }
-                
+                }
+              }                
             }
         }
         stage('Deploy') {
