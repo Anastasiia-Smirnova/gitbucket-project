@@ -8,7 +8,7 @@ def submitStatusCheck(String checkName, String state) {
       -H \"Authorization: Bearer ${GIT_TOKEN}\" \
       -H \"X-GitHub-Api-Version: 2022-11-28\" \
       https://api.github.com/repos/Anastasiia-Smirnova/gitbucket-project/statuses/${commitSHA} \
-      -d \'{"state":"${state}","target_url":"http://10.26.0.139:9090/job/gitbucket-project/job/main/${BUILD_NUMBER}//build/status","description":"${checkName} stage succeeded!","context":"${checkName}"}\'
+      -d \'{"state":"${state}","target_url":"${BUILD_URL}/build/status","description":"${checkName} stage succeeded!","context":"${checkName}"}\'
     """
   }
 }
