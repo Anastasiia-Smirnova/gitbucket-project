@@ -89,7 +89,7 @@ pipeline {
                   sh """
                     docker run -itd -p 3306:3306 --name db --network test-network mysql:${BUILD_NUMBER}
                   """
-                  sleep 180
+                  sleep 60
                   echo 'Running GitBucket...'
                   withCredentials([string(credentialsId: 'mysql-password', variable: 'MYSQL_ROOT_PASSWORD')]) {
                     // Use the MYSQL_ROOT_PASSWORD environment variable in your command
@@ -104,7 +104,7 @@ pipeline {
                   def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
                   sh """
                     docker logs ${containerId}
-                    sleep 60
+                    sleep 10
                     curl localhost:8080
                   """
                   submitStatusCheck('stage/test-run', 'success')
