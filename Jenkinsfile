@@ -70,6 +70,32 @@ pipeline {
                 """
             }
         }
+        stage('Docker Build MySQL') {
+            steps {
+                script {
+                    // Fetch secrets directly from Vault within the stage
+                    withVault([vaultConfiguration: [vaultUrl: 'http://127.0.0.1:8200', vaultCredentialId: 'vault-token'],
+                               vaultSecrets: [[path: 'secret/mysql', 
+                                               secretValues: [
+                                                   [$class: 'VaultSecretValue', envVar: 'MYSQL_ROOT_PASSWORD', vaultKey: 'MYSQL_ROOT_PASSWORD'],
+                                                   [$class: 'VaultSecretValue', envVar: 'MYSQL_DATABASE', vaultKey: 'MYSQL_DATABASE'],
+                                                   [$class: 'VaultSecretValue', envVar: 'MYSQL_USER', vaultKey: 'MYSQL_USER'],
+                                                   [$class: 'VaultSecretValue', envVar: 'MYSQL_PASSWORD', vaultKey: 'MYSQL_PASSWORD']
+                                               ]]]]) {
+                        // Use the secrets fetched from Vault
+                        echo 'Building MySQL...'
+                        sh """
+                          cd ./mysql
+                          docker build -t mysql:${BUILD_NUMBER} . \\
+                          --build-arg MYSQL_ROOT_PASSWORD='${MYSQL_ROOT_PASSWORD}' \\
+                          --build-arg MYSQL_DATABASE='${MYSQL_DATABASE}' \\
+                          --build-arg MYSQL_USER='${MYSQL_USER}' \\
+                          --build-arg MYSQL_PASSWORD='${MYSQL_PASSWORD}'
+                        """
+                    }
+                }
+            }
+        }
         stage('Docker Build GitBucket') {
             steps {
                 echo 'Building GitBucket...'
