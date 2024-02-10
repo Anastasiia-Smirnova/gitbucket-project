@@ -74,23 +74,23 @@ pipeline {
             steps {
                 script {
                     // Fetch secrets directly from Vault within the stage
-                    withVault([vaultConfiguration: [vaultUrl: 'http://127.0.0.1:8200', vaultCredentialId: 'vault-token'],
+                    withVault([configuration: [vaultUrl: 'http://vault:8200', vaultCredentialId: 'vault-token'],
                                vaultSecrets: [[path: 'secret/mysql', 
                                                secretValues: [
-                                                   [$class: 'VaultSecretValue', envVar: 'MYSQL_ROOT_PASSWORD', vaultKey: 'MYSQL_ROOT_PASSWORD'],
-                                                   [$class: 'VaultSecretValue', envVar: 'MYSQL_DATABASE', vaultKey: 'MYSQL_DATABASE'],
-                                                   [$class: 'VaultSecretValue', envVar: 'MYSQL_USER', vaultKey: 'MYSQL_USER'],
-                                                   [$class: 'VaultSecretValue', envVar: 'MYSQL_PASSWORD', vaultKey: 'MYSQL_PASSWORD']
+                                                   [envVar: 'MYSQL_ROOT_PASSWORD', vaultKey: 'MYSQL_ROOT_PASSWORD'],
+                                                   [envVar: 'MYSQL_DATABASE', vaultKey: 'MYSQL_DATABASE'],
+                                                   [envVar: 'MYSQL_USER', vaultKey: 'MYSQL_USER'],
+                                                   [envVar: 'MYSQL_PASSWORD', vaultKey: 'MYSQL_PASSWORD']
                                                ]]]]) {
                         // Use the secrets fetched from Vault
                         echo 'Building MySQL...'
                         sh """
                           cd ./mysql
                           docker build -t mysql:${BUILD_NUMBER} . \\
-                          --build-arg MYSQL_ROOT_PASSWORD='${MYSQL_ROOT_PASSWORD}' \\
-                          --build-arg MYSQL_DATABASE='${MYSQL_DATABASE}' \\
-                          --build-arg MYSQL_USER='${MYSQL_USER}' \\
-                          --build-arg MYSQL_PASSWORD='${MYSQL_PASSWORD}'
+                          --build-arg MYSQL_ROOT_PASSWORD='${env.MYSQL_ROOT_PASSWORD}' \\
+                          --build-arg MYSQL_DATABASE='${env.MYSQL_DATABASE}' \\
+                          --build-arg MYSQL_USER='${env.MYSQL_USER}' \\
+                          --build-arg MYSQL_PASSWORD='${env.MYSQL_PASSWORD}'
                         """
                     }
                 }
