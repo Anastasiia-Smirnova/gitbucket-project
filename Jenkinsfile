@@ -61,7 +61,7 @@ pipeline {
               }     
             }
         }
-        stage('Docker Build MySQL') {
+        /*stage('Docker Build MySQL') {
             steps {
                 echo 'Building MySQL...'
                 sh """
@@ -69,7 +69,7 @@ pipeline {
                   docker build -t mysql:${BUILD_NUMBER} .
                 """
             }
-        }
+        }*/
         stage('Docker Build MySQL') {
             steps {
                 script {
