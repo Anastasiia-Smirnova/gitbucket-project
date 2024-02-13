@@ -74,7 +74,7 @@ pipeline {
             steps {
                 script {
                     // Fetch secrets directly from Vault within the stage
-                    withCredentials([vaultString(credentialsId: 'vault-root-password', variable: MYSQL_ROOT_PASSWORD), vaultString(credentialsId: 'vault-database', variable: MYSQL_DATABASE), vaultString(credentialsId: 'vault-user', variable: MYSQL_USER), vaultString(credentialsId: 'vault-password', variable: MYSQL_PASSWORD)]) {
+                    withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD'), vaultString(credentialsId: 'vault-database', variable: 'MYSQL_DATABASE'), vaultString(credentialsId: 'vault-user', variable: 'MYSQL_USER'), vaultString(credentialsId: 'vault-password', variable: 'MYSQL_PASSWORD')]) {
                         // Use the secrets fetched from Vault
                         echo 'Building MySQL...'
                         sh """
