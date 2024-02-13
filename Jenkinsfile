@@ -75,7 +75,7 @@ pipeline {
                 script {
                     // Fetch secrets directly from Vault within the stage
                     withVault([configuration: [vaultUrl: 'http://127.0.0.1:8200', vaultCredentialId: 'vault-token'],
-                               vaultSecrets: [[path: 'secret/mysql', 
+                               vaultSecrets: [[path: 'secret/data/mysql', 
                                                secretValues: [
                                                    [envVar: 'MYSQL_ROOT_PASSWORD', vaultKey: 'MYSQL_ROOT_PASSWORD'],
                                                    [envVar: 'MYSQL_DATABASE', vaultKey: 'MYSQL_DATABASE'],
