@@ -16,7 +16,7 @@
     <!-- encoders are  by default assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
         <file>/opt/gitbucket/log/gitbucket.log</file>
-        <append>false</append>
+        <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
             <fileNamePattern>gitbucket-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
