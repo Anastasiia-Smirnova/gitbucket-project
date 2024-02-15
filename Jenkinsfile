@@ -119,7 +119,7 @@ pipeline {
                       \"
                     """
                   }
-                  def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket -v /opt/gitbucket/log:/opt/gitbucket/log --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
+                  def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
                   sh """
                     docker logs ${containerId}
                     sleep 10
