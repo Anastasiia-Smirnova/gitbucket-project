@@ -1,16 +1,15 @@
 FROM adoptopenjdk:11-jre-hotspot
 
-COPY target/executable/gitbucket.war /opt/gitbucket.war
+COPY ./target/executable/gitbucket.war /opt/gitbucket.war
+COPY ./startup.sh /startup.sh
 
 RUN ln -s /gitbucket /root/.gitbucket
 
 VOLUME /gitbucket
-
-VOLUME /opt/gitbucket/log
 
 ENV GITBUCKET_HOME=/gitbucket
 
 # Port for web page and Port for SSH access to git repository (Optional)
 EXPOSE 8080 29418
 
-CMD ["sh", "-c", "java -Dlogback.configurationFile=/gitbucket/logback-settings.xml -jar /opt/gitbucket.war"]
+ENTRYPOINT ["/startup.sh"]
