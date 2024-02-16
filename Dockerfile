@@ -1,5 +1,7 @@
 FROM adoptopenjdk:11-jre-hotspot
 
+LABEL "com.datadoghq.ad.logs"='[{"type":"file", "source": "gitbucket", "service": "gitbucket", "path": "/opt/gitbucket/log/gitbucket.log"}]'
+
 COPY ./target/executable/gitbucket.war /opt/gitbucket.war
 COPY ./startup.sh /startup.sh
 
