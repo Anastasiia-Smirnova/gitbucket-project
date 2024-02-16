@@ -114,7 +114,7 @@ pipeline {
                   sh """
                     docker logs ${containerId}
                     sleep 10
-                    curl localhost:8080
+                    curl -f localhost:8080
                   """
                   submitStatusCheck('stage/test-run', 'success')
                 } catch (e) {
