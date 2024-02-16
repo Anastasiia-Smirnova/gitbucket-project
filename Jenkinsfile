@@ -26,7 +26,7 @@ pipeline {
                 checkout scm
                 sh """
                   docker rm -f \$(docker ps -aq) || echo "No containers found"
-                  docker rmi -f \$(docker images -q)  || echo "No images found"
+                  docker rmi -f \$(docker images -q) || echo "No images found"
                 """
             }
         }
@@ -61,15 +61,6 @@ pipeline {
               }     
             }
         }
-        /*stage('Docker Build MySQL') {
-            steps {
-                echo 'Building MySQL...'
-                sh """
-                  cd ./mysql
-                  docker build -t mysql:${BUILD_NUMBER} .
-                """
-            }
-        }*/
         stage('Docker Build MySQL') {
             steps {
                 script {
@@ -110,7 +101,7 @@ pipeline {
                   """
                   sleep 60
                   echo 'Running GitBucket...'
-                  withCredentials([string(credentialsId: 'mysql-password', variable: 'MYSQL_ROOT_PASSWORD')]) {
+                  withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD')]) {
                     sh """
                       mysql --host=127.0.0.1 -u root -p${MYSQL_ROOT_PASSWORD} -e \"
                       ALTER USER 'testuser'@'%' IDENTIFIED WITH mysql_native_password BY 'testpassword1';
