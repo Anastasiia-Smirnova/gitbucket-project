@@ -52,7 +52,7 @@ pipeline {
               script {
                 try {
                   echo 'Testing...'
-                  //sh "sbt test"
+                  sh "sbt test"
                   submitStatusCheck('stage/test', 'success')
                 } catch (e) {
                   submitStatusCheck('stage/test', 'failure')
