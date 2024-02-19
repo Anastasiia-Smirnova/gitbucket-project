@@ -3,7 +3,6 @@ FROM adoptopenjdk:11-jre-hotspot
 LABEL "com.datadoghq.ad.logs"='[{"type":"file", "source": "gitbucket", "service": "gitbucket", "path": "/opt/gitbucket/log/gitbucket.log"}]'
 
 COPY ./target/executable/gitbucket.war /opt/gitbucket.war
-COPY ./startup.sh /startup.sh
 
 RUN ln -s /gitbucket /root/.gitbucket
 
@@ -14,4 +13,4 @@ ENV GITBUCKET_HOME=/gitbucket
 # Port for web page and Port for SSH access to git repository (Optional)
 EXPOSE 8080 29418
 
-ENTRYPOINT ["/startup.sh"]
+CMD ["sh", "-c", "java -Dlogback.configurationFile=/gitbucket/logback-settings.xml -jar /opt/gitbucket.war"]

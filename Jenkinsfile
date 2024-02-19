@@ -99,7 +99,7 @@ pipeline {
                   sh """
                     docker run -itd -p 3306:3306 --name db --network test-network mysql:${BUILD_NUMBER}
                   """
-                  sleep 60
+                  sleep 59
                   echo 'Running GitBucket...'
                   withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD')]) {
                     sh """
@@ -114,7 +114,7 @@ pipeline {
                   sh """
                     docker logs ${containerId}
                     sleep 10
-                    curl localhost:8080
+                    curl -f localhost:8080
                   """
                   submitStatusCheck('stage/test-run', 'success')
                 } catch (e) {
