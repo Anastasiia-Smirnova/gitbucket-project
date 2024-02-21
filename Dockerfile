@@ -8,6 +8,8 @@ RUN ln -s /gitbucket /root/.gitbucket
 
 VOLUME /gitbucket
 
+COPY ./gitbucket-data/database.conf /gitbucket/
+
 ENV GITBUCKET_HOME=/gitbucket
 
 # Port for web page and Port for SSH access to git repository (Optional)
