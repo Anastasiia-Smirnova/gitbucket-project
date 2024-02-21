@@ -83,9 +83,9 @@ pipeline {
         stage('Docker Build GitBucket') {
             steps {
                 echo 'Building GitBucket...'
-                sh """
-                  docker build -t gitbucket:${BUILD_NUMBER} .
-                """
+                git '…'
+                def newApp = docker.build "smirnovaanastasiia/gitbucket:${BUILD_NUMBER}"
+                newApp.push()
             }
         }
         stage('Test Run') {
@@ -110,9 +110,8 @@ pipeline {
                       \"
                     """
                   }
-                  def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
+                  def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket --name gitbucket -p 8080:8080 --network test-network smirnovaanastasiia/gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
                   sh """
-                    docker tag gitbucket:${BUILD_NUMBER} smirnovaanastasiia/gitbucket:${BUILD_NUMBER}
                     docker logs ${containerId}
                     sleep 10
                     curl -f localhost:8080
