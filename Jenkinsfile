@@ -112,6 +112,7 @@ pipeline {
                   }
                   def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket --name gitbucket -p 8080:8080 --network test-network gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
                   sh """
+                    docker tag gitbucket:${BUILD_NUMBER} smirnovaanastasiia/gitbucket:${BUILD_NUMBER}
                     docker logs ${containerId}
                     sleep 10
                     curl -f localhost:8080
