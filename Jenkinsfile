@@ -105,7 +105,7 @@ pipeline {
                     sh """
                       mysql --host=127.0.0.1 -u root -p${MYSQL_ROOT_PASSWORD} -e \"
                       ALTER USER '${MYSQL_USER}'@'%' IDENTIFIED WITH mysql_native_password BY '${MYSQL_NEW_PASSWORD}';
-                      GRANT ALL PRIVILEGES ON gitbucket.* TO 'testuser'@'%';
+                      GRANT ALL PRIVILEGES ON gitbucket.* TO '${MYSQL_USER}'@'%';
                       FLUSH PRIVILEGES;
                       \"
                     """
@@ -143,3 +143,5 @@ pipeline {
         }
     }
 } 
+
+//pr
