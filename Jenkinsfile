@@ -82,10 +82,12 @@ pipeline {
         }
         stage('Docker Build GitBucket') {
             steps {
+              script {
                 echo 'Building GitBucket...'
                 git '…'
                 def newApp = docker.build "smirnovaanastasiia/gitbucket:${BUILD_NUMBER}"
                 newApp.push()
+              }
             }
         }
         stage('Test Run') {
