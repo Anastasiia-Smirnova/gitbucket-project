@@ -8,7 +8,7 @@ RUN ln -s /gitbucket /root/.gitbucket
 
 VOLUME /gitbucket
 
-COPY ./gitbucket-data/database.conf /gitbucket/
+COPY ./gitbucket-data/k8s-database.conf /gitbucket/database.conf
 
 ENV GITBUCKET_HOME=/gitbucket
 
