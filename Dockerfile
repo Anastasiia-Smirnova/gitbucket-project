@@ -10,6 +10,8 @@ VOLUME /gitbucket
 
 COPY ./gitbucket-data/k8s-database.conf /gitbucket/database.conf
 
+COPY ./gitbucket-data/logback-settings.xml /gitbucket/logback-settings.xml
+
 ENV GITBUCKET_HOME=/gitbucket
 
 # Port for web page and Port for SSH access to git repository (Optional)
