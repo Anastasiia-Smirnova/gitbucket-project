@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: gitbucket
-        image: smirnovaanastasiia/gitbucket:1
+        image: smirnovaanastasiia/gitbucket:38
         ports:
         - containerPort: 8080
 ---
