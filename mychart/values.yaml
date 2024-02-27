@@ -4,4 +4,4 @@ nameSpace: gitbucket
 
 image:
   name: smirnovaanastasiia/gitbucket
-  tag: 38
+  tag: 39
