@@ -84,7 +84,6 @@ pipeline {
             steps {
               script {
                 echo 'Building GitBucket...'
-                //git '…'
                 def newApp = docker.build "smirnovaanastasiia/gitbucket:${BUILD_NUMBER}"
                 newApp.push()
               }
@@ -128,7 +127,26 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying...'
+                echo 'Deploying MySQL...'
+                sh """
+                  helm upgrade --install mysql \
+                  --set auth.rootPassword=p@ssw0rd,auth.database=gitbucket \
+                  --set mysql.image.debug=true \
+                  --set mysql.primary.readinessProbe.initialDelaySeconds=90000000 \
+                    oci://registry-1.docker.io/bitnamicharts/mysql -n gitbucket
+
+                  kubectl exec -it mysql-0 -n gitbucket -- mysql -uroot -p'p@ssw0rd' -e \ 
+                      \"ALTER USER 'testuser'@'%' IDENTIFIED WITH mysql_native_password BY 'testpassword1'; \
+                      GRANT ALL PRIVILEGES ON gitbucket.* TO 'testuser'@'%'; \
+                      FLUSH PRIVILEGES; 
+                      \"
+                  """
+
+                echo 'Deploying Gitbucket...'
+                sh """
+                    helm upgrade --install gitbucket ./mychart --set image.tag=${BUILD_NUMBER}
+                    nohup kubectl port-forward svc/gitbucket-service 8080:8080 --address='0.0.0.0' -n gitbucket &
+                  """
             }
         }
     }
@@ -146,4 +164,3 @@ pipeline {
     }
 } 
 
-//pr
