@@ -133,7 +133,7 @@ pipeline {
                   --set auth.rootPassword=p@ssw0rd,auth.database=gitbucket \\
                   --set mysql.image.debug=true \\
                   --set mysql.primary.readinessProbe.initialDelaySeconds=90000000 \\
-                    oci://registry-1.docker.io/bitnamicharts/mysql -n gitbucket
+                    ./helm/mysql -n gitbucket
                 """
 
                 withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD'), vaultString(credentialsId: 'vault-new-password', variable: 'MYSQL_NEW_PASSWORD'), vaultString(credentialsId: 'vault-user', variable: 'MYSQL_USER')]) {
@@ -148,9 +148,7 @@ pipeline {
 
                 echo 'Deploying Gitbucket...'
                 sh """
-                    helm upgrade --install gitbucket ./mychart --set image.tag=${BUILD_NUMBER}
-                    
-                    nohup kubectl port-forward svc/gitbucket-service 8080:8080 --address='0.0.0.0' -n gitbucket &
+                    helm upgrade --install gitbucket ./helm/gitbucket --set image.tag=${BUILD_NUMBER} -n gitbucket
                   """
             }
         }
