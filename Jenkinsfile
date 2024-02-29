@@ -134,6 +134,7 @@ pipeline {
                   --set mysql.image.debug=true \\
                   --set mysql.primary.readinessProbe.initialDelaySeconds=90000000 \\
                     ./helm/mysql -n gitbucket
+                    sleep 120
                 """
 
                 withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD'), vaultString(credentialsId: 'vault-new-password', variable: 'MYSQL_NEW_PASSWORD'), vaultString(credentialsId: 'vault-user', variable: 'MYSQL_USER')]) {
