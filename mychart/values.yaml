@@ -1,7 +1,0 @@
-appName: gitbucket
-
-nameSpace: gitbucket
-
-image:
-  name: smirnovaanastasiia/gitbucket
-  tag: 39
