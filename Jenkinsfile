@@ -133,6 +133,7 @@ pipeline {
                   --set auth.rootPassword=p@ssw0rd,auth.database=gitbucket \\
                   --set mysql.image.debug=true \\
                   --set mysql.primary.readinessProbe.initialDelaySeconds=90000000 \\
+                  --set mysql.primary.startupProbe.initialDelaySeconds=90000000 \\
                     ./helm/mysql -n gitbucket
                     sleep 120
                 """
