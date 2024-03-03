@@ -200,53 +200,53 @@ spec:
             {{- if .Values.primary.extraPorts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.primary.extraPorts "context" $) | nindent 12 }}
             {{- end }}
-          {{- if not .Values.diagnosticMode.enabled }}
-          {{- if .Values.primary.customLivenessProbe }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.primary.customLivenessProbe "context" $) | nindent 12 }}
-          {{- else if .Values.primary.livenessProbe.enabled }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.livenessProbe "enabled") "context" $) | nindent 12 }}
-            exec:
-              command:
-                - /bin/bash
-                - -ec
+#          {{- if not .Values.diagnosticMode.enabled }}
+#          {{- if .Values.primary.customLivenessProbe }}
+#          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.primary.customLivenessProbe "context" $) | nindent 12 }}
+#          {{- else if .Values.primary.livenessProbe.enabled }}
+#          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.livenessProbe "enabled") "context" $) | nindent 12 }}
+#            exec:
+#              command:
+#                - /bin/bash
+#                - -ec
 #                - |
 #                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
 #                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
 #                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
 #                  fi
 #                  mysqladmin status -uroot -p"${password_aux}"
-          {{- end }}
-          {{- if .Values.primary.customReadinessProbe }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.primary.customReadinessProbe "context" $) | nindent 12 }}
-          {{- else if .Values.primary.readinessProbe.enabled }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.readinessProbe "enabled") "context" $) | nindent 12 }}
-            exec:
-              command:
-                - /bin/bash
-                - -ec
+#          {{- end }}
+#          {{- if .Values.primary.customReadinessProbe }}
+#          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.primary.customReadinessProbe "context" $) | nindent 12 }}
+#          {{- else if .Values.primary.readinessProbe.enabled }}
+#          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.readinessProbe "enabled") "context" $) | nindent 12 }}
+#            exec:
+#              command:
+#                - /bin/bash
+#                - -ec
 #                - |
 #                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
 #                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
 #                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
 #                  fi
 #                  mysqladmin status -uroot -p"${password_aux}"
-          {{- end }}
-          {{- if .Values.primary.customStartupProbe }}
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.primary.customStartupProbe "context" $) | nindent 12 }}
-          {{- else if .Values.primary.startupProbe.enabled }}
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.startupProbe "enabled") "context" $) | nindent 12 }}
-            exec:
-              command:
-                - /bin/bash
-                - -ec
+#          {{- end }}
+#          {{- if .Values.primary.customStartupProbe }}
+#          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.primary.customStartupProbe "context" $) | nindent 12 }}
+#          {{- else if .Values.primary.startupProbe.enabled }}
+#          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.startupProbe "enabled") "context" $) | nindent 12 }}
+#            exec:
+#              command:
+#                - /bin/bash
+#                - -ec
 #                - |
 #                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
 #                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
 #                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
 #                  fi
 #                  mysqladmin status -uroot -p"${password_aux}"
-          {{- end }}
-          {{- end }}
+#          {{- end }}
+#          {{- end }}
           {{- if .Values.primary.resources }}
           resources: {{ toYaml .Values.primary.resources | nindent 12 }}
           {{- else if ne .Values.primary.resourcesPreset "none" }}
