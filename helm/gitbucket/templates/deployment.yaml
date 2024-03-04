@@ -22,11 +22,14 @@ spec:
         - containerPort: 8080
         volumeMounts: 
         - name: gitbucket-cm
-          mountPath: /gitbucket/database.conf
+          mountPath: /gitbucket
       volumes:
       - name: gitbucket-cm
         configMap:
-          name: gitbucket-configmap    
+          name: gitbucket-configmap   
+          items:
+          - key: database.conf
+            path: database.conf 
         envFrom:
         resources:
           requests:
