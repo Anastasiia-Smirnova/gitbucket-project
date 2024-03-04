@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitbucket-configmap
+  namespace: gitbucket
+
+data:
+  database.conf: |
+    db {
+      url = "jdbc:mysql://db:3306/gitbucket?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&serverRsaPublicKeyFile=/gitbucket/public_key.pem"
+      user = "testuser"
+      password = "testpassword1"
+    }

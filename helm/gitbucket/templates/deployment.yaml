@@ -20,6 +20,13 @@ spec:
         image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 8080
+        volumeMounts: 
+        - name: gitbucket-cm
+          mountPath: /gitbucket/database.conf
+      volumes:
+      - name: gitbucket-cm
+        configMap:
+          name: gitbucket-configmap    
         envFrom:
         resources:
           requests:
