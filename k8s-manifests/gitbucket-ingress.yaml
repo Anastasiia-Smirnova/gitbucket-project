@@ -8,6 +8,10 @@ spec:
   - host: gitbucket-project.com
     http:
       paths:
-      - backend:
-            serviceName: "{{ .Values.appName }}-service"
-            servicePort: 8080
+      - path: /
+        pathType: Exact
+        backend:
+          service:
+            name: gitbucket-service
+            port:
+              number: 8080 
