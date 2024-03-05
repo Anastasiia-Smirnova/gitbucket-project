@@ -4,16 +4,10 @@ metadata:
   name: gitbucket-ingress
   namespace: gitbucket
 spec:
-  tls:
-  - hosts:
-      - https-example.foo.com
-    secretName: testsecret-tls
   rules:
   - host: gitbucket-project.com
     http:
       paths:
       - backend:
-          service:
-            name: "{{ .Values.appName }}-service"
-            port:
-              number: 8080
+            serviceName: "{{ .Values.appName }}-service"
+            servicePort: 8080
