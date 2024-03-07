@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gitbucket-ingress
+  namespace: gitbucket
+spec:
+  rules:
+  - host: gitbucket-project.com
+    http:
+      paths:
+      - path: /
+        pathType: Exact
+        backend:
+          service:
+            name: gitbucket-service
+            port:
+              number: 8080 

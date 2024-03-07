@@ -1,0 +1,20 @@
+replicaCount: 1
+appName: mysql
+
+nameSpace: gitbucket
+
+image:
+  repository: mysql
+  pullPolicy: IfNotPresent
+  tag: latest
+
+mysqlRootPassword: p@ssw0rd
+mysqlDatabase: gitbucket
+mysqlUser: testuser
+mysqlPassword: testpassword1
+
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi

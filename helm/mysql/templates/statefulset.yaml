@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.appName }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  serviceName: "{{ .Values.appName }}"
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+    spec:
+      containers:
+      - name: {{ .Values.appName }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: {{ .Values.mysqlRootPassword }}
+        - name: MYSQL_DATABASE
+          value: {{ .Values.mysqlDatabase }}
+        - name: MYSQL_USER
+          value: {{ .Values.mysqlUser }}
+        - name: MYSQL_PASSWORD
+          value: {{ .Values.mysqlPassword }}
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: "{{ .Values.appName }}-persistent-storage"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size }}
+
