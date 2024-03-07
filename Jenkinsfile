@@ -13,6 +13,8 @@ def submitStatusCheck(String checkName, String state) {
   }
 }
 
+def newApp
+
 pipeline {
     agent {
       label 'agent1'
@@ -84,8 +86,7 @@ pipeline {
             steps {
               script {
                 echo 'Building GitBucket...'
-                def newApp = docker.build "smirnovaanastasiia/gitbucket:${BUILD_NUMBER}"
-                newApp.push()
+                newApp = docker.build "smirnovaanastasiia/gitbucket:${BUILD_NUMBER}"
               }
             }
         }
@@ -118,6 +119,8 @@ pipeline {
                     curl -f localhost:8080
                   """
                   submitStatusCheck('stage/test-run', 'success')
+
+                  newApp.push()
                 } catch (e) {
                   submitStatusCheck('stage/test', 'failure')
                   throw e
