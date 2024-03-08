@@ -5,3 +5,8 @@ nameSpace: gitbucket
 image:
   name: smirnovaanastasiia/gitbucket
   tag: 39
+
+memoryRequest: "250Mi" 
+cpuRequest: "250m" 
+memoryLimit: "500Mi"
+cpuLimit: "500m"

@@ -33,8 +33,8 @@ spec:
         envFrom:
         resources:
           requests:
-            memory: "500Mi" 
-            cpu: "500m"    # 500milliCPUs (1/2 CPU)
+            memory: {{ .Values.memoryRequest }}
+            cpu: {{ .Values.cpuRequest }}
           limits:
-            memory: "1500Mi"
-            cpu: "1000m"
+            memory: {{ .Values.memoryLimit }}
+            cpu: {{ .Values.cpuLimit }}
