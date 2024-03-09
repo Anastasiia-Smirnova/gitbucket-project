@@ -10,3 +10,8 @@ memoryRequest: "250Mi"
 cpuRequest: "250m" 
 memoryLimit: "500Mi"
 cpuLimit: "500m"
+
+url: "jdbc:mysql://mysql-service:3306/gitbucket?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&serverRsaPublicKeyFile=/gitbucket/public_key.pem"
+user:
+password:
+database: gitbucket

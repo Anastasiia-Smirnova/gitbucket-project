@@ -8,10 +8,10 @@ image:
   pullPolicy: IfNotPresent
   tag: latest
 
-mysqlRootPassword: p@ssw0rd
 mysqlDatabase: gitbucket
-mysqlUser: testuser
-mysqlPassword: testpassword1
+mysqlRootPassword:
+mysqlUser:
+mysqlPassword:
 
 persistence:
   enabled: true

@@ -36,7 +36,11 @@ object DatabaseConfig {
     ConfigFactory.parseFile(file)
   }
 
-  private lazy val dbUrl = getValue("db.url", config.getString) // config.getString("db.url")
+  private lazy val dbUrl = sys.env.getOrElse("DB_URL", getValue("db.url", config.getString))
+
+  // Fetching database credentials from environment variables
+  lazy val user: String = sys.env.getOrElse("DB_USER", getValue("db.user", config.getString))
+  lazy val password: String = sys.env.getOrElse("DB_PASSWORD", getValue("db.password", config.getString))
 
   def url(directory: Option[String]): String = {
     val sb = new StringBuilder()
