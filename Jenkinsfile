@@ -101,7 +101,7 @@ pipeline {
                   sh """
                     docker run -itd -p 3306:3306 --name db --network test-network mysql:${BUILD_NUMBER}
                   """
-                  sleep 59
+                  sleep 180
                   echo 'Running GitBucket...'
                   withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD'), vaultString(credentialsId: 'vault-new-password', variable: 'MYSQL_NEW_PASSWORD'), vaultString(credentialsId: 'vault-user', variable: 'MYSQL_USER')]) {
                     sh """
