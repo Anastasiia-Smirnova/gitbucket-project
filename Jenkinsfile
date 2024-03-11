@@ -135,7 +135,7 @@ pipeline {
                   helm upgrade --install mysql ./helm/mysql -n gitbucket
                   sleep 60
                 """
-
+                /*
                 withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD'), vaultString(credentialsId: 'vault-new-password', variable: 'MYSQL_NEW_PASSWORD'), vaultString(credentialsId: 'vault-user', variable: 'MYSQL_USER')]) {
                   sh """
                     mysql --host=192.168.49.2 --port=30001 -u root -p${MYSQL_ROOT_PASSWORD} -e \"
@@ -144,7 +144,7 @@ pipeline {
                     FLUSH PRIVILEGES;
                     \"
                   """
-                }
+                } */
 
                 echo 'Deploying Gitbucket...'
                 sh """
