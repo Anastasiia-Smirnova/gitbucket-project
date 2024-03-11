@@ -138,7 +138,7 @@ pipeline {
 
                 withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD'), vaultString(credentialsId: 'vault-new-password', variable: 'MYSQL_NEW_PASSWORD'), vaultString(credentialsId: 'vault-user', variable: 'MYSQL_USER')]) {
                   sh """
-                    mysql --host=192.168.58.2 --port=30001 -u root -p${MYSQL_ROOT_PASSWORD} -e \"
+                    mysql --host=192.168.49.2 --port=30001 -u root -p${MYSQL_ROOT_PASSWORD} -e \"
                     ALTER USER '${MYSQL_USER}'@'%' IDENTIFIED WITH mysql_native_password BY '${MYSQL_NEW_PASSWORD}';
                     GRANT ALL PRIVILEGES ON gitbucket.* TO '${MYSQL_USER}'@'%';
                     FLUSH PRIVILEGES;
