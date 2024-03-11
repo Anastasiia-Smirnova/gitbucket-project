@@ -65,7 +65,8 @@ spec:
       volumes:
       - name: init-scripts
         configMap:
-          name: mysql-init-db-script          
+          name: mysql-init-db-script
+          defaultMode: 0755          
   volumeClaimTemplates:
   - metadata:
       name: "{{ .Values.appName }}-persistent-storage"
