@@ -13,6 +13,8 @@ def submitStatusCheck(String checkName, String state) {
   }
 }
 
+def newApp
+
 pipeline {
     agent {
       label 'agent1'
@@ -84,8 +86,7 @@ pipeline {
             steps {
               script {
                 echo 'Building GitBucket...'
-                def newApp = docker.build "smirnovaanastasiia/gitbucket:${BUILD_NUMBER}"
-                newApp.push()
+                newApp = docker.build "smirnovaanastasiia/gitbucket:${BUILD_NUMBER}"
               }
             }
         }
@@ -100,7 +101,7 @@ pipeline {
                   sh """
                     docker run -itd -p 3306:3306 --name db --network test-network mysql:${BUILD_NUMBER}
                   """
-                  sleep 59
+                  sleep 120
                   echo 'Running GitBucket...'
                   withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD'), vaultString(credentialsId: 'vault-new-password', variable: 'MYSQL_NEW_PASSWORD'), vaultString(credentialsId: 'vault-user', variable: 'MYSQL_USER')]) {
                     sh """
@@ -114,10 +115,12 @@ pipeline {
                   def containerId = sh(script: "docker run -itd -v ./gitbucket-data:/gitbucket --name gitbucket -p 8080:8080 --network test-network smirnovaanastasiia/gitbucket:${BUILD_NUMBER}", returnStdout: true).trim()
                   sh """
                     docker logs ${containerId}
-                    sleep 10
+                    sleep 60
                     curl -f localhost:8080
                   """
                   submitStatusCheck('stage/test-run', 'success')
+
+                  newApp.push()
                 } catch (e) {
                   submitStatusCheck('stage/test', 'failure')
                   throw e
@@ -132,7 +135,7 @@ pipeline {
                   helm upgrade --install mysql ./helm/mysql -n gitbucket
                   sleep 60
                 """
-
+                /*
                 withCredentials([vaultString(credentialsId: 'vault-root-password', variable: 'MYSQL_ROOT_PASSWORD'), vaultString(credentialsId: 'vault-new-password', variable: 'MYSQL_NEW_PASSWORD'), vaultString(credentialsId: 'vault-user', variable: 'MYSQL_USER')]) {
                   sh """
                     mysql --host=192.168.49.2 --port=30001 -u root -p${MYSQL_ROOT_PASSWORD} -e \"
@@ -141,7 +144,7 @@ pipeline {
                     FLUSH PRIVILEGES;
                     \"
                   """
-                }
+                } */
 
                 echo 'Deploying Gitbucket...'
                 sh """
