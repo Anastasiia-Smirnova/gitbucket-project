@@ -50,7 +50,12 @@ jobs:
         aws s3 cp target/executable/gitbucket.war s3://elasticbeanstalk-eu-central-1-538547716265/gitbucket_${GITHUB_RUN_NUMBER}.war
 
   terraform:
+    needs: build-and-deploy
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./tff
 
     steps:
     - uses: hashicorp/setup-terraform@v3
