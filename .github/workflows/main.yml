@@ -47,4 +47,4 @@ jobs:
         ls -la
         ls -la target
         ls -la target/executable
-        aws s3 cp target/executable/gitbucket.war s3://elasticbeanstalk-eu-central-1-538547716265/gitbucket.war
+        aws s3 cp target/executable/gitbucket.war s3://elasticbeanstalk-eu-central-1-538547716265/gitbucket_${GITHUB_RUN_NUMBER}.war
