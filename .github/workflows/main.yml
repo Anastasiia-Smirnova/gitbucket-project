@@ -55,7 +55,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./tff
+        working-directory: tff
 
     steps:
     - uses: hashicorp/setup-terraform@v3
