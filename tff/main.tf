@@ -135,7 +135,7 @@ resource "aws_elastic_beanstalk_application_version" "gitbucket_app_version" {
   application = aws_elastic_beanstalk_application.gitbucket.name
   description = "Initial version"
   bucket = "elasticbeanstalk-eu-central-1-538547716265"
-  key    = "gitbucket-2.war"
+  key    = "gitbucket_${var.gitbucket_version}.war"
 }
 
 data "aws_secretsmanager_secret" "mysql_secret" {
