@@ -58,6 +58,8 @@ jobs:
         working-directory: tff
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
     - uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: "1.7.5"   
