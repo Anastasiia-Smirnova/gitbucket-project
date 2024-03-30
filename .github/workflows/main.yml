@@ -33,6 +33,7 @@ jobs:
     - name: Build with sbt
       run: |
         sbt clean package
+        ls -la
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -43,4 +44,5 @@ jobs:
 
     - name: Upload .war to S3
       run: |
+        ls -la
         aws s3 cp target/executable/gitbucket.war s3://elasticbeanstalk-eu-central-1-538547716265/gitbucket.war
