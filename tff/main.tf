@@ -7,7 +7,7 @@ resource "aws_elastic_beanstalk_environment" "gitbucket-env" {
   application         = aws_elastic_beanstalk_application.gitbucket.name
   solution_stack_name = "64bit Amazon Linux 2023 v4.2.1 running Corretto 11"
   tier                = "WebServer"
-  version_label       = aws_elastic_beanstalk_application_version.gitbucket_version.name
+  version_label       = aws_elastic_beanstalk_application_version.gitbucket_app_version.name
 
   setting {
     namespace = "aws:autoscaling:asg"
@@ -130,8 +130,8 @@ resource "aws_elastic_beanstalk_environment" "gitbucket-env" {
   }
 }
 
-resource "aws_elastic_beanstalk_application_version" "gitbucket_version" {
-  name        = "v1"
+resource "aws_elastic_beanstalk_application_version" "gitbucket_app_version" {
+  name        = var.gitbucket_version
   application = aws_elastic_beanstalk_application.gitbucket.name
   description = "Initial version"
   bucket = "elasticbeanstalk-eu-central-1-538547716265"
@@ -154,4 +154,8 @@ resource "aws_sns_topic_subscription" "ebs_email_subscription" {
   topic_arn = aws_sns_topic.ebs_notifications.arn
   protocol  = "email"
   endpoint  = "anastasia.smirnova96@gmail.com" 
+}
+
+variable "gitbucket_version" {
+  type = string
 }
