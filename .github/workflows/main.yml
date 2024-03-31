@@ -126,5 +126,5 @@ jobs:
 
     - name: Terraform Apply
       id: apply
-      run: terraform apply -auto-approve -no-color -var=«gitbucket_version=${GITHUB_RUN_NUMBER}»
+      run: terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
       continue-on-error: true    
