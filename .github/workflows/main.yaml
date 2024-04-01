@@ -97,9 +97,9 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run:
-        - terraform workspace select ${APP_ENV}
-        - terraform plan -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+      run: |
+        terraform workspace select ${APP_ENV}
+        terraform plan -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
       continue-on-error: true
 
     - uses: actions/github-script@v6
@@ -141,8 +141,8 @@ jobs:
 
     - name: Terraform Apply
       id: apply
-      run:
-        - terraform workspace select ${APP_ENV} 
-        - terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+      run: |
+        terraform workspace select ${APP_ENV} 
+        terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
       continue-on-error: true    
 
