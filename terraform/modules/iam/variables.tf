@@ -3,20 +3,20 @@ variable "app_iam_role" {
   default = "gitbucket-eb-ec2-iam-role"
 }
 
-variable "eb_web_tier_policy_arn" {
-  type    = string
-  default = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
-}
+#variable "eb_web_tier_policy_arn" {
+#  type    = string
+#  default = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
+#}
 
-variable "eb_worker_tier_policy_arn" {
-  type    = string
-  default = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
-}
+#variable "eb_worker_tier_policy_arn" {
+#  type    = string
+#  default = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
+#}
 
-variable "eb_multicontainer_docker_policy_arn" {
-  type    = string
-  default = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
-}
+#variable "eb_multicontainer_docker_policy_arn" {
+#  type    = string
+#  default = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
+#}
 
 variable "gitbucket_s3_war_access_policy" {
   type    = string

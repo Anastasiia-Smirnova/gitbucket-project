@@ -16,7 +16,8 @@ module "gitbucket_db" {
 module "gitbucket_app" {
   source = "./modules/app"
 
-  instance_profile_name   = module.gitbucket_iam.app_instance_profile
+  instance_profile_name   = module.gitbucket_iam.instance_profile_name
+  app_iam_role            = module.gitbucket_iam.app_iam_role
   vpc_id                  = module.gitbucket_network.vpc_id
   app_subnet_01_id        = module.gitbucket_network.app_subnet_01_id
   app_subnet_02_id        = module.gitbucket_network.app_subnet_02_id
@@ -24,5 +25,5 @@ module "gitbucket_app" {
   app_public_subnet_02_id = module.gitbucket_network.app_public_subnet_02_id
   app_security_group_id   = module.gitbucket_network.app_security_group_id
   db_endpoint             = module.gitbucket_db.db_endpoint
-  gitbucket_version       = var.gitbucket_version
+  #gitbucket_version       = var.gitbucket_version
 }

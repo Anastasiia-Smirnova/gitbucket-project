@@ -62,6 +62,24 @@ resource "aws_subnet" "gitbucket_datasubnet_02" {
   }
 }
 
+#resource "aws_network_interface" "gitbucket_network_interface_01" {
+#  subnet_id       = aws_subnet.gitbucket_appsubnet_01.id
+#  security_groups = [aws_security_group.gitbucket_appsrv_sg.id]
+#  
+#  tags = {
+#    Name = "${var.app_name}-${terraform.workspace}-network-interface-01"
+#  }
+#}
+
+#resource "aws_network_interface" "gitbucket_network_interface_02" {
+#  subnet_id       = aws_subnet.gitbucket_appsubnet_02.id
+#  security_groups = [aws_security_group.gitbucket_appsrv_sg.id]
+#  
+#  tags = {
+#    Name = "${var.app_name}-${terraform.workspace}-network-interface-02"
+#  }
+#}
+
 resource "aws_route_table" "gitbucket_publicRT" {
   vpc_id = aws_vpc.gitbucket_vpc.id
 
@@ -79,6 +97,7 @@ resource "aws_route_table_association" "gitbucket_publicRT_association1" {
   subnet_id      = aws_subnet.gitbucket_publicsubnet_01.id
   route_table_id = aws_route_table.gitbucket_publicRT.id
 }
+
 resource "aws_route_table_association" "gitbucket_publicRT_association2" {
   subnet_id      = aws_subnet.gitbucket_publicsubnet_02.id
   route_table_id = aws_route_table.gitbucket_publicRT.id
@@ -114,6 +133,20 @@ resource "aws_nat_gateway" "gitbucket_natgw" {
   }
 
   depends_on = [aws_internet_gateway.gitbucket_igw]
+}
+
+resource "aws_lb" "gitbucket_lb" {
+  name               = "gitbucket-load-balancer"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.gitbucket_appsrv_sg.id]
+  subnets            = [aws_subnet.gitbucket_publicsubnet_01.id, aws_subnet.gitbucket_publicsubnet_02.id]
+
+  enable_deletion_protection = false
+
+  tags = {
+    Name = "${var.app_name}-${terraform.workspace}-load-balancer"
+  }
 }
 
 resource "aws_security_group" "gitbucket_appsrv_sg" {
