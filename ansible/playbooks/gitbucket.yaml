@@ -16,35 +16,4 @@
         state: present
       when: ansible_os_family == "RedHat"
 
-    - name: Construct S3 URL for the WAR file
-      set_fact:
-        s3_war_url: "s3://{{ s3_bucket }}/{{ app_env }}/gitbucket_{{ github_run_number }}.war"
-
-    - name: Create application directory
-      ansible.builtin.file:
-        path: "{{ app_directory }}"
-        state: directory
-        mode: '0755'
-
-    - name: Ensure AWS CLI is installed
-      ansible.builtin.package:
-        name: awscli
-        state: present
-      when: ansible_os_family == "RedHat"
-
-    - name: Copy application .war from S3 to application directory
-      command: aws s3 cp {{ s3_war_url }} {{ app_directory }}/app.war
-    
-    - name: Initialize Terraform
-      community.general.terraform:
-        project_path: "/Users/anastasiiasmirnova/Desktop/gitbucket-project/terraform"
-        force_init: true
-        state: present
-
-    - name: Apply Terraform
-      community.general.terraform:
-        project_path: "/Users/anastasiiasmirnova/Desktop/gitbucket-project/terraform"
-        state: present
-        force_init: true
-        plan: no
     
