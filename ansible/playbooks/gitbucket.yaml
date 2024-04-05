@@ -1,19 +1,7 @@
 ---
 - name: Deploy Gitbucket Application to EC2
-  hosts: gitbucket
+  hosts: ec2_instances
   become: true
 
-  vars:
-    app_directory: "/opt/gitbucket"
-    app_env: "{{ lookup('env','APP_ENV') }}"
-    github_run_number: "{{ lookup('env','GITHUB_RUN_NUMBER') }}"
-    s3_bucket: "elasticbeanstalk-eu-central-1-538547716265"
-
-  tasks:
-    - name: Install necessary dependencies
-      ansible.builtin.yum:
-        name: java-1.8.0-openjdk
-        state: present
-      when: ansible_os_family == "RedHat"
-
-    
+  roles:
+    - gitbucket-deploy
