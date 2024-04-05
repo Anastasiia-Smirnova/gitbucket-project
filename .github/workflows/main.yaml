@@ -147,7 +147,7 @@ jobs:
       continue-on-error: true
 
   execute-ansible:
-    needs: build-and-upload
+    needs: terraform
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
