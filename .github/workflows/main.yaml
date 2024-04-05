@@ -149,7 +149,6 @@ jobs:
   execute-ansible:
     needs: terraform
     runs-on: ubuntu-latest
-    env:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
