@@ -175,7 +175,9 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init  
+        run: | 
+          terraform init
+          terraform workspace select ${APP_ENV}  
         working-directory: terraform
       
       - name: Setup Python for Ansible
