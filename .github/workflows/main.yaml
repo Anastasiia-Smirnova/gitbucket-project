@@ -149,7 +149,6 @@ jobs:
   execute-ansible:
     needs: terraform
     runs-on: ubuntu-latest
-    env:
     defaults:
       run:
         working-directory: ansible
