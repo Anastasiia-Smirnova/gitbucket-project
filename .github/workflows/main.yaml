@@ -176,7 +176,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init  
-        working-directory: ansible
+        working-directory: terraform
       
       - name: Setup Python for Ansible
         uses: actions/setup-python@v2
