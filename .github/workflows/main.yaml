@@ -191,6 +191,6 @@ jobs:
           pip install ansible
       
       - name: Execute Ansible Playbook
-        run: ansible-playbook gitbucket.yaml -e "app_env=${{ needs.build-and-upload.outputs.APP_ENV }} github_run_number=${{ github.run_number }}"
+        run: ansible-playbook -i ./inventory gitbucket.yaml -e "app_env=${{ needs.build-and-upload.outputs.APP_ENV }} github_run_number=${{ github.run_number }}"
         env:
           APP_ENV: ${{ needs.build-and-upload.outputs.APP_ENV }}

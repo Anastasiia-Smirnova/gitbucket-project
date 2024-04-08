@@ -1,8 +1,7 @@
 plugin: amazon.aws.aws_ec2
 regions:
   - eu-central-1
-include_filters:
-  - tag:Name:
-      - 'gitbucket-dev-instance'
-  - tag:Name:
-      - 'gitbucket-prod-instance'
+keyed_groups:
+  - prefix: '' # No prefix added to the group name
+    key: tags['Environment'] # Assuming both instances have an 'Environment' tag
+    separator: "" # No separator between prefix and key value

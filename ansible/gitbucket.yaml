@@ -1,4 +1,13 @@
 ---
+- name: Aggregate hosts into ec2_instances group
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Add all hosts to ec2_instances group
+      add_host:
+        name: "{{ inventory_hostname }}"
+        groups: ec2_instances
+
 - name: Deploy Gitbucket Application to EC2
   hosts: ec2_instances
   become: true
