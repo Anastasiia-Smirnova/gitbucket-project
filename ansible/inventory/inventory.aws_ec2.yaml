@@ -7,3 +7,5 @@ keyed_groups:
     separator: "" # No separator between prefix and key value
 compose:
   ansible_host: public_ip_address
+host_vars:
+  ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'  
