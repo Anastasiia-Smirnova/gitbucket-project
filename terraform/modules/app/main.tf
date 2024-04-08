@@ -1,10 +1,11 @@
 resource "aws_instance" "gitbucket_instance" {
-  count         = length(local.app_subnets)
-  ami           = "ami-0f7204385566b32d0"
-  instance_type = "t2.micro"
-  subnet_id     = local.app_subnets[count.index]
-  security_groups  = [var.app_security_group_id]
+  count                = length(local.app_subnets)
+  ami                  = "ami-0f7204385566b32d0"
+  instance_type        = "t2.micro"
+  subnet_id            = local.app_subnets[count.index]
+  security_groups      = [var.app_security_group_id]
   iam_instance_profile = var.instance_profile_name
+  key_name             = "gitbucket-ssh" 
 
   credit_specification {
     cpu_credits = "unlimited"
