@@ -171,6 +171,14 @@ resource "aws_security_group" "gitbucket_appsrv_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+    # Ingress rule allowing HTTPS access
+  ingress {
+    from_port   = 0
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Egress rule allowing all outgoing traffic
   egress {
     from_port   = 0
