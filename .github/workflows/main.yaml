@@ -191,6 +191,8 @@ jobs:
           pip install ansible
       
       - name: Execute Ansible Playbook
-        run: ansible-playbook -i ./inventory gitbucket.yaml -e "app_env=${{ needs.build-and-upload.outputs.APP_ENV }} github_run_number=${{ github.run_number }}"
+        run: |
+          echo ${{ secrets.AWS_ACCESS_KEY_ID }} >> ./vault-pass.txt
+          ansible-playbook -i ./inventory gitbucket.yaml --vault-password-file ./vault-pass.txt -e "app_env=${{ needs.build-and-upload.outputs.APP_ENV }} github_run_number=${{ github.run_number }}"
         env:
           APP_ENV: ${{ needs.build-and-upload.outputs.APP_ENV }}
