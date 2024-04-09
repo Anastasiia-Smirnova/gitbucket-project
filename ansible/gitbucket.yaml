@@ -1,6 +1,8 @@
 ---
 - name: Setup SSH Key and Aggregate Hosts
   hosts: all
+  vars:
+    ansible_python_interpreter: /Users/anastasiiasmirnova/.pyenv/versions/3.12.1/bin/python
   gather_facts: no
   vars_files:
     - secret_ssh_key.yml
