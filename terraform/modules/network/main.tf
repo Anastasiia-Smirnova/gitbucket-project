@@ -109,7 +109,7 @@ resource "aws_default_route_table" "default" {
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.gitbucket_natgw.id
-#    gateway_id = aws_internet_gateway.gitbucket_igw.id
+#   gateway_id = aws_internet_gateway.gitbucket_igw.id
   }
 
   tags = {
