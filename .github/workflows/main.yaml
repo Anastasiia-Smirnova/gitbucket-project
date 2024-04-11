@@ -198,12 +198,11 @@ jobs:
       - name: Execute Ansible Playbook
         env:
           TF_OUTPUT: ${{ steps.terraform_outputs.outputs.json_output }}
+          APP_ENV: ${{ needs.build-and-upload.outputs.APP_ENV }}
         run: |
           echo ${{ secrets.EC2_SSH_KEY }} >> ./id_rsa
           DB_URL=$(echo $TF_OUTPUT | jq -r '.db_endpoint.value')
           ansible-playbook -i ./inventory gitbucket.yaml  -e "aws_region=${{ aws-region }} aws_secret_access_key=${{ aws-secret-access-key }} aws_access_key_id=${{ aws-access-key-id }} app_env=${{ needs.build-and-upload.outputs.APP_ENV }} github_run_number=${{ github.run_number }} db_url=${{ DB_URL }} db_user=${{ db_user }} db_password=${{ db_password }}"
-        env:
-          APP_ENV: ${{ needs.build-and-upload.outputs.APP_ENV }}
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
