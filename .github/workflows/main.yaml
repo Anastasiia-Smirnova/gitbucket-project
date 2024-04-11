@@ -214,7 +214,7 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          echo ${{ secrets.EC2_SSH_KEY }} >> ./id_rsa
+          echo "${{ secrets.EC2_SSH_KEY }}" >> ./id_rsa
           DB_URL=$(echo "$TF_OUTPUT" | jq -r '.db_endpoint.value')
           ansible-playbook -i ./inventory gitbucket.yaml  -e "aws_region=$AWS_REGION aws_secret_access_key=$AWS_SECRET_ACCESS_KEY aws_access_key_id=$AWS_ACCESS_KEY_ID app_env=$APP_ENV github_run_number=${{ github.run_number }} db_url=$DB_URL db_user=$DB_USER db_password=$DB_PASSWORD"
 #        with:
