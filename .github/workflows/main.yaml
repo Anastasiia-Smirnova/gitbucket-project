@@ -149,6 +149,8 @@ jobs:
   execute-ansible:
     needs: terraform
     runs-on: ubuntu-latest
+    env:
+      APP_ENV: dev
     defaults:
       run:
         working-directory: ansible
@@ -203,7 +205,6 @@ jobs:
       
       - name: Execute Ansible Playbook
         env:
-          APP_ENV: ${{ needs.build-and-upload.outputs.APP_ENV }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "eu-central-1"
