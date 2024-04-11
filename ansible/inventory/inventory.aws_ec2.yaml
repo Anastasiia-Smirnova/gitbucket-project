@@ -8,4 +8,5 @@ keyed_groups:
 compose:
   ansible_host: public_ip_address
 host_vars:
-  ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'  
+  ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+  ansible_python_interpreter: /usr/bin/python3.9
