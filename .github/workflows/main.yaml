@@ -197,7 +197,7 @@ jobs:
 
       - name: Install jq
         run: |
-          apt-get install -y jq
+          sudo apt-get install -y jq
       
       - name: Execute Ansible Playbook
         env:
