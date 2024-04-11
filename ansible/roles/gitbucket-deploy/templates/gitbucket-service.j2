@@ -1,0 +1,12 @@
+[Unit]
+Description=Ansible Playbook Execution for Gitbucket Deployment
+
+[Service]
+Environment="DB_URL={{ db_url }}"
+Environment="DB_USER={{ db_user }}"
+Environment="DB_PASSWORD={{ db_password }}"
+ExecStart=/bin/java -jar /opt/scala/gitbucket_{{ GITHUB_RUN_NUMBER }}.war
+WorkingDirectory=/opt/scala/
+
+[Install]
+WantedBy=multi-user.target

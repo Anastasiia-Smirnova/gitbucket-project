@@ -1,5 +1,6 @@
 module "gitbucket_network" {
-  source = "./modules/network"
+  source       = "./modules/network"
+  ec2_instance_ids = module.gitbucket_app.ec2_instance_ids
 }
 
 module "gitbucket_iam" {

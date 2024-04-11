@@ -1,0 +1,54 @@
+---
+- name: Update apt cache
+  ansible.builtin.yum:
+    update_cache: yes
+
+- name: Install OpenJDK 11
+  ansible.builtin.package:
+    name: java-11-amazon-corretto
+    state: present
+
+- name: debug
+  ansible.builtin.debug:
+    var: APP_ENV
+
+- name: debug
+  ansible.builtin.debug:
+    var: GITHUB_RUN_NUMBER
+
+- name: Create directory for .war file
+  ansible.builtin.file:
+    path: /opt/scala
+    state: directory
+    mode: '0755'
+
+- name: Download .war file from S3 bucket
+  amazon.aws.s3_object:
+    bucket: "elasticbeanstalk-eu-central-1-538547716265"
+    object: "{{ APP_ENV }}/gitbucket_{{ GITHUB_RUN_NUMBER }}.war"
+    dest: "/opt/scala/gitbucket_{{ GITHUB_RUN_NUMBER }}.war"
+    mode: get
+    access_key: "{{ aws_access_key_id }}"
+    secret_key: "{{ aws_secret_access_key }}"
+    region: "{{ aws_region }}"
+
+- name: Configure systemd unit file for Gitbucket
+  ansible.builtin.template:
+    src: gitbucket-service.j2
+    dest: /etc/systemd/system/gitbucket.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Start Gitbucket service
+  ansible.builtin.systemd_service:
+    name: gitbucket-service
+    state: started
+    daemon_reload: true
+    
+
+
+#- name: Start Scala application
+#  ansible.builtin.shell: "nohup java -jar /opt/scala/gitbucket_{{ GITHUB_RUN_NUMBER }}.war > /var/log/gitbucket.log 2>&1 &"
+#  async: 15
+#  poll: 0

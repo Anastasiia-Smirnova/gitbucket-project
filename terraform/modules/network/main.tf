@@ -108,8 +108,8 @@ resource "aws_default_route_table" "default" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.gitbucket_natgw.id
-#   gateway_id = aws_internet_gateway.gitbucket_igw.id
+#    nat_gateway_id = aws_nat_gateway.gitbucket_natgw.id
+    gateway_id = aws_internet_gateway.gitbucket_igw.id
   }
 
   tags = {
@@ -148,6 +148,31 @@ resource "aws_lb" "gitbucket_lb" {
   tags = {
     Name = "${var.app_name}-${terraform.workspace}-load-balancer"
   }
+}
+
+resource "aws_lb_target_group" "gitbucket_lb_tg" {
+  name     = "gitbucket-lb-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.gitbucket_vpc.id
+}
+
+resource "aws_lb_listener" "gitbucket_lb_listener" {
+  load_balancer_arn = aws_lb.gitbucket_lb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.gitbucket_lb_tg.arn
+  }
+}
+
+resource "aws_lb_target_group_attachment" "gitbucket_lb_tg_attachment" {
+  count            = length(var.ec2_instance_ids)
+  target_group_arn = aws_lb_target_group.gitbucket_lb_tg.arn
+  target_id        = var.ec2_instance_ids[count.index]
+  port             = 80
 }
 
 resource "aws_security_group" "gitbucket_appsrv_sg" {

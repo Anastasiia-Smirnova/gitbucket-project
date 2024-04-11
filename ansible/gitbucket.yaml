@@ -1,34 +1,45 @@
 ---
 - name: Setup SSH Key and Aggregate Hosts
   hosts: all
-  vars:
-    ansible_python_interpreter: /Users/anastasiiasmirnova/.pyenv/versions/3.12.1/bin/python
   gather_facts: no
-  vars_files:
-    - secret_ssh_key.yml
+#  vars_files:
+#    - secret_ssh_key.yaml
+  vars:
+    ansible_user: ec2-user 
+    ansible_ssh_private_key_file: ./id_rsa
   tasks:
-    - name: Create temporary file for SSH key
-      ansible.builtin.tempfile:
-        state: file
-      register: temp_key_file
+#    - name: Create temporary file for SSH key
+#
+#      ansible.builtin.tempfile:
+#        state: file
+#      register: temp_key_file
+#      delegate_to: localhost
 
-    - name: Copy SSH private key to temporary file
-      ansible.builtin.copy:
-        dest: "{{ temp_key_file.path }}"
-        content: "{{ ssh_private_key }}"
-        mode: '0600'
-      delegate_to: localhost
+#    - name: Copy SSH private key to temporary file
+#      ansible.builtin.copy:
+#        dest: "{{ temp_key_file.path }}"
+#        content: "{{ ssh_private_key }}"
+#        mode: '0600'
+#      delegate_to: localhost
+
+#    - name: Show vars 
+#      ansible.builtin.debug:
+#        var: "{{ ssh_private_key }}"
+#      delegate_to: localhost
 
     - name: Add all hosts to ec2_instances group
       add_host:
         name: "{{ inventory_hostname }}"
         groups: ec2_instances
-        ansible_ssh_private_key_file: "{{ temp_key_file.path }}"
+        ansible_ssh_private_key_file: ./id_rsa
         ansible_user: ec2-user
-        ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+#        ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
 - name: Deploy Gitbucket Application to EC2
-  hosts: ec2_instances
+  hosts: all
   become: true
+  vars:
+    ansible_user: ec2-user
+    ansible_ssh_private_key_file: ./id_rsa
   roles:
-    - gitbucket-deploy
+  - gitbucket-deploy
