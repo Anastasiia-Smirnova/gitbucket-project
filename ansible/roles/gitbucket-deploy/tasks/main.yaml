@@ -8,6 +8,19 @@
     name: java-11-amazon-corretto
     state: present
 
+- name: Install pip
+  ansible.builtin.package:
+    name: pip3
+    state: present 
+
+- name: Install botocore
+  ansible.builtin.shell:
+    cmd: pip3 install botocore
+
+- name: Install boto3
+  ansible.builtin.shell:
+    cmd: pip3 install boto3  
+
 - name: debug
   ansible.builtin.debug:
     var: app_env
