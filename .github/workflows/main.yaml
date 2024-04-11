@@ -199,14 +199,19 @@ jobs:
         env:
           TF_OUTPUT: ${{ steps.terraform_outputs.outputs.json_output }}
           APP_ENV: ${{ needs.build-and-upload.outputs.APP_ENV }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "eu-central-1"
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           echo ${{ secrets.EC2_SSH_KEY }} >> ./id_rsa
           DB_URL=$(echo $TF_OUTPUT | jq -r '.db_endpoint.value')
-          ansible-playbook -i ./inventory gitbucket.yaml  -e "aws_region=${{ aws-region }} aws_secret_access_key=${{ aws-secret-access-key }} aws_access_key_id=${{ aws-access-key-id }} app_env=${{ needs.build-and-upload.outputs.APP_ENV }} github_run_number=${{ github.run_number }} db_url=${{ DB_URL }} db_user=${{ db_user }} db_password=${{ db_password }}"
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: "eu-central-1"
-          db_user: ${{ secrets.DB_USER }}
-          db_password: ${{ secrets.DB_PASSWORD }}  
+          ansible-playbook -i ./inventory gitbucket.yaml  -e "aws_region=${{ AWS_REGION }} aws_secret_access_key=${{ AWS_SECRET_ACCESS_KEY }} aws_access_key_id=${{ AWS_ACCESS_KEY_ID }} app_env=${{ needs.build-and-upload.outputs.APP_ENV }} github_run_number=${{ github.run_number }} db_url=${{ DB_URL }} db_user=${{ DB_USER }} db_password=${{ DB_PASSWORD }}"
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: "eu-central-1"
+#          db_user: ${{ secrets.DB_USER }}
+#          db_password: ${{ secrets.DB_PASSWORD }}  
 
