@@ -10,7 +10,7 @@
 
 - name: Install pip
   ansible.builtin.package:
-    name: pip3
+    name: pip
     state: present 
 
 - name: Install botocore
