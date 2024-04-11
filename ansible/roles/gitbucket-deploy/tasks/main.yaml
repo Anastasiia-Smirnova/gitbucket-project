@@ -10,11 +10,11 @@
 
 - name: debug
   ansible.builtin.debug:
-    var: APP_ENV
+    var: app_env
 
 - name: debug
   ansible.builtin.debug:
-    var: GITHUB_RUN_NUMBER
+    var: github_run_number
 
 - name: Create directory for .war file
   ansible.builtin.file:
@@ -25,8 +25,8 @@
 - name: Download .war file from S3 bucket
   amazon.aws.s3_object:
     bucket: "elasticbeanstalk-eu-central-1-538547716265"
-    object: "{{ APP_ENV }}/gitbucket_{{ GITHUB_RUN_NUMBER }}.war"
-    dest: "/opt/scala/gitbucket_{{ GITHUB_RUN_NUMBER }}.war"
+    object: "{{ app_env }}/gitbucket_{{ github_run_number }}.war"
+    dest: "/opt/scala/gitbucket_{{ github_run_number }}.war"
     mode: get
     access_key: "{{ aws_access_key_id }}"
     secret_key: "{{ aws_secret_access_key }}"
@@ -49,6 +49,6 @@
 
 
 #- name: Start Scala application
-#  ansible.builtin.shell: "nohup java -jar /opt/scala/gitbucket_{{ GITHUB_RUN_NUMBER }}.war > /var/log/gitbucket.log 2>&1 &"
+#  ansible.builtin.shell: "nohup java -jar /opt/scala/gitbucket_{{ github_run_number }}.war > /var/log/gitbucket.log 2>&1 &"
 #  async: 15
 #  poll: 0

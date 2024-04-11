@@ -212,6 +212,8 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" >> ./id_rsa
           chmod 600 ./id_rsa
-          DB_URL=$(terraform output --json | jq -r '.db_endpoint.value')
+          DB_ENDPOINT=$(terraform output --json | jq -r '.db_endpoint.value')
+          DB_URL="jdbc:mysql://${DB_ENDPOINT}/gitbucket?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&serverRsaPublicKeyFile=/gitbucket/public_key.pem"
           ansible-playbook -i ./inventory gitbucket.yaml  -e "aws_region=$AWS_REGION aws_secret_access_key=$AWS_SECRET_ACCESS_KEY aws_access_key_id=$AWS_ACCESS_KEY_ID app_env=$APP_ENV github_run_number=${{ github.run_number }} db_url=$DB_URL db_user=$DB_USER db_password=$DB_PASSWORD"
+
 
