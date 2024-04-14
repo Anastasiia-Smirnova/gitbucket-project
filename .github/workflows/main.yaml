@@ -182,7 +182,7 @@ jobs:
           pwd
           terraform init
           terraform workspace select ${APP_ENV} 
-          terrafrom output --json  
+          terraform output --json  
         working-directory: terraform
       
       - name: Setup Python for Ansible
