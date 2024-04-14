@@ -178,8 +178,10 @@ jobs:
       - name: Terraform Init
         id: init
         run: | 
+          echo "app env ${APP_ENV}"
           terraform init
-          terraform workspace select ${APP_ENV}  
+          terraform workspace select ${APP_ENV} 
+          terrafrom output --json  
         working-directory: terraform
       
       - name: Setup Python for Ansible
