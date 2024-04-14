@@ -179,6 +179,7 @@ jobs:
         id: init
         run: | 
           echo "app env ${APP_ENV}"
+          pwd
           terraform init
           terraform workspace select ${APP_ENV} 
           terrafrom output --json  
