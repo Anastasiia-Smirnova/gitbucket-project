@@ -167,6 +167,7 @@ resource "aws_lb_listener" "gitbucket_lb_listener" {
     target_group_arn = aws_lb_target_group.gitbucket_lb_tg.arn
   }
 }
+###
 
 resource "aws_lb_target_group_attachment" "gitbucket_lb_tg_attachment" {
   count            = length(var.ec2_instance_ids)
