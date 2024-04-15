@@ -159,7 +159,7 @@ resource "aws_lb_target_group" "gitbucket_lb_tg" {
 
 resource "aws_lb_listener" "gitbucket_lb_listener" {
   load_balancer_arn = aws_lb.gitbucket_lb.arn
-  port              = 80
+  port              = 8080
   protocol          = "HTTP"
 
   default_action {
@@ -172,7 +172,7 @@ resource "aws_lb_target_group_attachment" "gitbucket_lb_tg_attachment" {
   count            = length(var.ec2_instance_ids)
   target_group_arn = aws_lb_target_group.gitbucket_lb_tg.arn
   target_id        = var.ec2_instance_ids[count.index]
-  port             = 80
+  port             = 8080
 }
 
 resource "aws_security_group" "gitbucket_appsrv_sg" {
