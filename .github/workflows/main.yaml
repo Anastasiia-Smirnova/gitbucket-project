@@ -181,8 +181,8 @@ jobs:
           echo "app env ${APP_ENV}"
           pwd
           terraform init
-          terraform workspace select ${APP_ENV} 
-          terraform output --json  
+          terraform workspace select ${APP_ENV}
+          terraform output --json > ../ansible/tf_output.json
         working-directory: terraform
       
       - name: Setup Python for Ansible
@@ -213,11 +213,10 @@ jobs:
           AWS_REGION: "eu-central-1"
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          TEST: $(terraform output --json)
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" >> ./id_rsa
           chmod 600 ./id_rsa
-          DB_ENDPOINT=$(terraform output --json | jq -r '.db_endpoint.value')
+          DB_ENDPOINT=$(cat tf_output.json | jq -r '.db_endpoint.value')
           DB_URL="jdbc:mysql://${DB_ENDPOINT}/gitbucket?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&serverRsaPublicKeyFile=/gitbucket/public_key.pem"
           
           echo "terraform output --json: $TEST"
