@@ -205,7 +205,7 @@ resource "aws_security_group" "gitbucket_appsrv_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Ingress rule allowing HTTP access
+  # Ingress rule allowing HTTP access test
   ingress {
     from_port   = 8080
     to_port     = 8080
