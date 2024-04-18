@@ -177,14 +177,14 @@ resource "aws_lb_listener" "gitbucket_lb_listener" {
 
 resource "aws_lb_target_group_attachment" "gitbucket_lb_tg_attachment_blue" {
   count            = length(var.ec2_instance_ids_blue)
-  target_group_arn = aws_lb_target_group.gitbucket_lb_tg.arn
+  target_group_arn = aws_lb_target_group.gitbucket_lb_tg_blue.arn
   target_id        = var.ec2_instance_ids_blue[count.index]
   port             = 8080
 }
 
 resource "aws_lb_target_group_attachment" "gitbucket_lb_tg_attachment_green" {
   count            = length(var.ec2_instance_ids_green)
-  target_group_arn = aws_lb_target_group.gitbucket_lb_tg.arn
+  target_group_arn = aws_lb_target_group.gitbucket_lb_tg_green.arn
   target_id        = var.ec2_instance_ids_green[count.index]
   port             = 8080
 }
