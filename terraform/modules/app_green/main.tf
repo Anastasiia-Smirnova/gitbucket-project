@@ -1,4 +1,4 @@
-resource "aws_instance" "gitbucket_instance" {
+resource "aws_instance" "gitbucket_instance_green" {
   count                       = length(local.app_subnets)
   ami                         = "ami-0f7204385566b32d0"
   instance_type               = "t2.micro"
@@ -14,6 +14,7 @@ resource "aws_instance" "gitbucket_instance" {
 
   tags = {
     Name = "${var.app_name}-${terraform.workspace}-instance"
+    Environment = "green"
   }
 }
 

@@ -13,6 +13,15 @@ variable "app_name" {
   default = "gitbucket"
 }
 
-variable "ec2_instance_ids" {
+variable "ec2_instance_ids_blue" {
   type    = list(string)
+}
+
+variable "ec2_instance_ids_green" {
+  type    = list(string)
+}
+
+variable "active_environment" {
+  type    = string
+  default = "blue"
 }
