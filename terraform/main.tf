@@ -45,5 +45,5 @@ module "gitbucket_app_green" {
   app_public_subnet_02_id = module.gitbucket_network.app_public_subnet_02_id
   app_security_group_id   = module.gitbucket_network.app_security_group_id
   db_endpoint             = module.gitbucket_db.db_endpoint
-  gitbucket_version       = var.gitbucket_version
+#  gitbucket_version       = var.gitbucket_version
 }
