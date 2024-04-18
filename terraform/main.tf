@@ -1,7 +1,7 @@
 module "gitbucket_network" {
   source                 = "./modules/network"
-  ec2_instance_ids_blue  = module.gitbucket_app.ec2_instance_ids_blue
-  ec2_instance_ids_green = module.gitbucket_app.ec2_instance_ids_green
+  ec2_instance_ids_blue  = module.gitbucket_app_blue.ec2_instance_ids_blue
+  ec2_instance_ids_green = module.gitbucket_app_green.ec2_instance_ids_green
   active_environment     = var.active_environment
 }
 
