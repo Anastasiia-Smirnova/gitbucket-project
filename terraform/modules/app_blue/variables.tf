@@ -2,6 +2,10 @@ variable "instance_profile_name" {
   type = string
 }
 
+variable "instance_tag" {
+  type        = string
+}
+
 variable "vpc_id" {
   type = string
 }
