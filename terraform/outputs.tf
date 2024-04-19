@@ -14,10 +14,3 @@ output "db_endpoint" {
   value = module.gitbucket_db.db_endpoint
 }
 
-output "instance_count_blue" {
-  value = module.gitbucket_app_blue.instance_count_blue
-}
-
-output "instance_count_green" {
-  value = module.gitbucket_app_green.instance_count_green
-}
