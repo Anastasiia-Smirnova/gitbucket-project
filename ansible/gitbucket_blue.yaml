@@ -14,7 +14,7 @@
         ansible_user: ec2-user
 
 - name: Deploy Gitbucket Application to EC2
-  hosts: tag_Name_blue
+  hosts: blue
   become: true
   vars:
     ansible_user: ec2-user
