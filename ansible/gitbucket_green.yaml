@@ -1,6 +1,6 @@
 ---
 - name: Setup SSH Key and Aggregate Hosts
-  hosts: tag_Name_green
+  hosts: green
   gather_facts: no
   vars:
     ansible_user: ec2-user 
