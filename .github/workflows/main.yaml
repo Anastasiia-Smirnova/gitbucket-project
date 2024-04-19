@@ -160,19 +160,38 @@ jobs:
           fi
           echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV
 
-          if [ "$ACTIVE_ENV" == "blue" ]; then
-            echo "TF_VAR_instance_count_blue=0" >> $GITHUB_ENV
-            echo "TF_VAR_instance_count_green=2" >> $GITHUB_ENV
-          else
-            echo "TF_VAR_instance_count_blue=2" >> $GITHUB_ENV
-            echo "TF_VAR_instance_count_green=0" >> $GITHUB_ENV
-          fi
-
       - name: Terraform Apply
         id: apply
         run: |
           terraform workspace select ${APP_ENV} 
+
+          if [ "$ACTIVE_ENV" == "blue" ]; then
+            echo "TF_VAR_instance_count_green=2" >> $GITHUB_ENV
+          else
+            echo "TF_VAR_instance_count_blue=2" >> $GITHUB_ENV
+          fi
+
           terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+        continue-on-error: true
+        working-directory: terraform
+
+      - name: News instances health check
+        id: check
+        run: |
+          IFS=',' read -r -a instance_array <<< "${{ steps.get-ips.outputs.ips }}"
+          if ./health_check.sh "${instance_array[@]}"; then
+            echo "Health check passed."
+
+            if [ "$ACTIVE_ENV" == "blue" ]; then
+              echo "TF_VAR_instance_count_blue=0" >> $GITHUB_ENV
+              terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+            else
+              echo "TF_VAR_instance_count_green=0" >> $GITHUB_ENV
+              terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+            fi
+
+          else
+            echo "Health check failed, no changes applied." 
         continue-on-error: true
         working-directory: terraform
 

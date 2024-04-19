@@ -1,6 +1,10 @@
-#output "ec2_instance_ips_blue" {
-#  value = module.gitbucket_app_blue.ec2_instance_ips
-#}
+output "ec2_instance_ips_blue" {
+  value = module.gitbucket_app_blue.ec2_instance_ips
+}
+
+output "ec2_instance_ips_green" {
+  value = module.gitbucket_app_green.ec2_instance_ips
+}
 
 output "ec2_instance_ids_blue" {
   value = module.gitbucket_app_blue.ec2_instance_ids_blue
