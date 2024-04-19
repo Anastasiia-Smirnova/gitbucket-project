@@ -6,6 +6,11 @@ variable "instance_tag" {
   type        = string
 }
 
+variable "instance_count_green" {
+  type        = number
+  default     = 1
+}
+
 variable "vpc_id" {
   type = string
 }

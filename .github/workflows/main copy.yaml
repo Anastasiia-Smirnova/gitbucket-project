@@ -52,102 +52,8 @@ jobs:
       run: |
         aws s3 cp target/executable/gitbucket.war s3://elasticbeanstalk-eu-central-1-538547716265/${APP_ENV}/gitbucket_${GITHUB_RUN_NUMBER}.war
 
-  terraform:
+  execute-terraform-and-ansible:
     needs: build-and-upload
-    runs-on: ubuntu-latest
-    env:
-      APP_ENV: dev
-    defaults:
-      run:
-        working-directory: terraform
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set env var based on branch
-      run: |
-        if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-          echo "APP_ENV=prod" >> $GITHUB_ENV
-        fi
-
-    - uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: "1.7.5"  
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-central-1   
-
-    - name: Terraform fmt
-      id: fmt
-      run: terraform fmt -check
-      continue-on-error: true
-
-    - name: Terraform Init
-      id: init
-      run: terraform init
-
-    - name: Terraform Validate
-      id: validate
-      run: terraform validate -no-color
-
-    - name: Terraform Plan
-      id: plan
-      run: |
-        terraform workspace select ${APP_ENV}
-        terraform plan -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
-      continue-on-error: true
-
-    - uses: actions/github-script@v6
-      if: github.event_name == 'pull_request'
-      env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-          <details><summary>Validation Output</summary>
-
-          \`\`\`\n
-          ${{ steps.validate.outputs.stdout }}
-          \`\`\`
-
-          </details>
-
-          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-
-          <details><summary>Show Plan</summary>
-
-          \`\`\`\n
-          ${process.env.PLAN}
-          \`\`\`
-
-          </details>
-
-          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
-
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })    
-
-    - name: Terraform Apply
-      id: apply
-      run: |
-        terraform workspace select ${APP_ENV} 
-        terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
-      continue-on-error: true
-
-  execute-ansible:
-    needs: terraform
     runs-on: ubuntu-latest
     env:
       APP_ENV: dev
@@ -168,28 +74,19 @@ jobs:
         with:
           terraform_version: "1.7.5"  
 
-      - name: Install AWS CLI
-        run: |
-          pip install awscli
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1   
+          aws-region: eu-central-1
+        working-directory: terraform
 
-      - name: Determine Active Environment
-        id: determine-env
-        run: |
-          chmod +x ./active_env.sh
-          ACTIVE_ENV=$(./scripts/determine_active_env.sh)
-          if [ "$ACTIVE_ENV" = "blue" ]; then
-            echo "OPPOSITE_ENV=green" >> $GITHUB_ENV
-          else
-            echo "OPPOSITE_ENV=blue" >> $GITHUB_ENV
-          fi
-          echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+        working-directory: terraform
 
       - name: Terraform Init
         id: init
@@ -200,6 +97,96 @@ jobs:
           terraform workspace select ${APP_ENV}
           terraform output --json > ../ansible/tf_output.json
         working-directory: terraform
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        working-directory: terraform
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform workspace select ${APP_ENV}
+          terraform plan -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+        continue-on-error: true
+        working-directory: terraform
+
+      - uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            <details><summary>Validation Output</summary>
+
+            \`\`\`\n
+            ${{ steps.validate.outputs.stdout }}
+            \`\`\`
+
+            </details>
+
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })  
+          working-directory: terraform
+
+      - name: Determine Active Environment
+        id: determine-env
+        run: |
+          chmod +x ./active_env.sh
+          ACTIVE_ENV=$(./active_env.sh)
+          if [ "$ACTIVE_ENV" = "blue" ]; then
+            echo "OPPOSITE_ENV=green" >> $GITHUB_ENV
+          else
+            echo "OPPOSITE_ENV=blue" >> $GITHUB_ENV
+          fi
+          echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV
+
+          if [ "$ACTIVE_ENV" == "blue" ]; then
+            echo "TF_VAR_instance_count_blue=0" >> $GITHUB_ENV
+            echo "TF_VAR_instance_count_green=2" >> $GITHUB_ENV
+          else
+            echo "TF_VAR_instance_count_blue=2" >> $GITHUB_ENV
+            echo "TF_VAR_instance_count_green=0" >> $GITHUB_ENV
+          fi
+
+      - name: Terraform Apply
+        id: apply
+        run: |
+          terraform workspace select ${APP_ENV} 
+          terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+        continue-on-error: true
+        working-directory: terraform
+
+      - name: Install AWS CLI
+        run: |
+          pip install awscli
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1   
       
       - name: Setup Python for Ansible
         uses: actions/setup-python@v2

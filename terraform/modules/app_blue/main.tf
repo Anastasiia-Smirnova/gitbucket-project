@@ -1,5 +1,5 @@
 resource "aws_instance" "gitbucket_instance_blue" {
-  count                       = length(local.app_subnets)
+  count                       = var.instance_count_blue
   ami                         = "ami-0f7204385566b32d0"
   instance_type               = "t2.micro"
   subnet_id                   = local.app_subnets[count.index]

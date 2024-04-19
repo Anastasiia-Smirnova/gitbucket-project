@@ -13,3 +13,11 @@ output "ec2_instance_ids_green" {
 output "db_endpoint" {
   value = module.gitbucket_db.db_endpoint
 }
+
+output "instance_count_blue" {
+  module.gitbucket_app_blue.instance_count_blue
+}
+
+output "instance_count_green" {
+  module.gitbucket_app_green.instance_count_green
+}
