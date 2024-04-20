@@ -160,6 +160,8 @@ jobs:
           fi
           echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV
 
+          echo "ACTIVE_ENV=$ACTIVE_ENV"
+
       - name: Fetch Instance IPs
         id: get-ips
         run: echo "::set-output name=ips::$(terraform output -json instance_ips | jq -r '.[]')"
