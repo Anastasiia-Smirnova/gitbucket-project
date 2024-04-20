@@ -192,14 +192,13 @@ jobs:
         run: |
           ACTIVE_ENV=$(./active_env.sh)
           echo "ACTIVE_ENV=$ACTIVE_ENV"
+          echo "terraform output -json ec2_instance_ips_blue"
+          echo "terraform output -json ec2_instance_ips_green"
+          
           if [ "$ACTIVE_ENV" = "blue" ]; then
             echo "::set-output name=ips::$(terraform output -json ec2_instance_ips_green | jq -r '.[]')"
-            echo "::set-output name=ips::$IP_OUTPUT"
-            echo "IP Output for Green: $IP_OUTPUT"
           else
             echo "::set-output name=ips::$(terraform output -json ec2_instance_ips_blue | jq -r '.[]')"
-            echo "::set-output name=ips::$IP_OUTPUT"
-            echo "IP Output for Blue: $IP_OUTPUT"
           fi
 
       - name: Health check
