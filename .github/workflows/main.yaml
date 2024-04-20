@@ -176,14 +176,12 @@ jobs:
           echo "ACTIVE_ENV=$ACTIVE_ENV"
 
           if [ "$ACTIVE_ENV" == "blue" ]; then
-            echo "TF_VAR_instance_count_green=2" >> $GITHUB_ENV
+            INSTANCE_COUNT_VAR="instance_count_green=2"
           else
-            echo "TF_VAR_instance_count_blue=2" >> $GITHUB_ENV
+            INSTANCE_COUNT_VAR="instance_count_blue=2"
           fi
 
-          echo "GITHUB_ENV=$GITHUB_ENV"
-
-          terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+          terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="${INSTANCE_COUNT_VAR}"
         continue-on-error: true
         working-directory: terraform
 
@@ -206,7 +204,25 @@ jobs:
           fi
         working-directory: terraform
 
- 
+      - name: Health check
+        id: check
+        run: |
+          IFS=',' read -r -a instance_array <<< "${{ steps.get-ips.outputs.ips }}"
+          if ./health_check.sh "${instance_array[@]}"; then
+            echo "Health check passed."
+
+            if [ "$ACTIVE_ENV" == "blue" ]; then
+              INSTANCE_COUNT_VAR="instance_count_green=2"
+            else
+              INSTANCE_COUNT_VAR="instance_count_blue=2"
+            fi
+
+            terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="${INSTANCE_COUNT_VAR}"
+
+          else
+            echo "Health check failed, no changes applied." 
+        continue-on-error: true
+        working-directory: terraform 
 
       - name: Install AWS CLI
         run: |
