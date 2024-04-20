@@ -160,11 +160,10 @@ jobs:
           fi
           echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV
 
-          echo "ACTIVE_ENV=$ACTIVE_ENV"
-
-      - name: Fetch Instance IPs
-        id: get-ips
-        run: echo "::set-output name=ips::$(terraform output -json instance_ips | jq -r '.[]')"
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
 
       - name: Terraform Apply
         id: apply
@@ -183,6 +182,16 @@ jobs:
           terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
         continue-on-error: true
         working-directory: terraform
+
+      - name: Fetch Instance IPs
+        id: get-ips
+        run: |
+          ACTIVE_ENV=$(./active_env.sh)
+          if [ "$ACTIVE_ENV" = "blue" ]; then
+            echo "::set-output name=ips::$(terraform output -json ec2_instance_ips_green | jq -r '.[]')"
+          else
+            echo "::set-output name=ips::$(terraform output -json ec2_instance_ips_blue | jq -r '.[]')"
+          fi
 
       - name: Health check
         id: check
@@ -228,11 +237,6 @@ jobs:
           pip install ansible
           pip install botocore
           pip install boto3
-
-      - name: Install jq
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
 
       - name: Verify jq installation
         run: |
