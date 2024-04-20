@@ -196,8 +196,7 @@ jobs:
       - name: Fetch Instance IPs
         id: get-ips
         run: |
-          terraform workspace show
-          ACTIVE_ENV=$(./active_env.sh)
+          ACTIVE_ENV=$(../ansible/active_env.sh)
           echo "ACTIVE_ENV=$ACTIVE_ENV"
 
           if [ "$ACTIVE_ENV" = "blue" ]; then
