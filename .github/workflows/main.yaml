@@ -191,6 +191,7 @@ jobs:
         run: |
           echo "Terraform Outputs:"
           terraform output -json
+        working-directory: terraform
 
       - name: Fetch Instance IPs
         id: get-ips
@@ -204,6 +205,7 @@ jobs:
           else
             echo "::set-output name=ips::$(terraform output -json ec2_instance_ips_blue | jq -r '.[]')"
           fi
+        working-directory: terraform
 
       - name: Health check
         id: check
