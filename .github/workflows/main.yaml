@@ -187,13 +187,17 @@ jobs:
         continue-on-error: true
         working-directory: terraform
 
+      - name: Debug Outputs
+        run: |
+          echo "Terraform Outputs:"
+          terraform output -json
+
       - name: Fetch Instance IPs
         id: get-ips
         run: |
+          terraform workspace show
           ACTIVE_ENV=$(./active_env.sh)
           echo "ACTIVE_ENV=$ACTIVE_ENV"
-          terraform output -json ec2_instance_ips_blue
-          terraform output -json ec2_instance_ips_green
 
           if [ "$ACTIVE_ENV" = "blue" ]; then
             echo "::set-output name=ips::$(terraform output -json ec2_instance_ips_green | jq -r '.[]')"
