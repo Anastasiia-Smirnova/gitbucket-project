@@ -179,8 +179,10 @@ jobs:
           terraform output --json | jq .active_environment.value
           ACTIVE_ENV=$(terraform output --json | jq .active_environment.value)
           if [ "$ACTIVE_ENV" = "blue" ]; then
+            OPPOSITE_ENV=green
             echo "OPPOSITE_ENV=green" >> $GITHUB_ENV
           else
+            OPPOSITE_ENV=blue
             echo "OPPOSITE_ENV=blue" >> $GITHUB_ENV
           fi
 
