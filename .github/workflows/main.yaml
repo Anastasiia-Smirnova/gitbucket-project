@@ -252,7 +252,7 @@ jobs:
           fi
              
           echo "INSTANCE_COUNT_VAR: ${INSTANCE_COUNT_VAR}" 
-          terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="${INSTANCE_COUNT_VAR}"
+          terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="${INSTANCE_COUNT_VAR}"  -var="active_environment=${OPPOSITE_ENV}"
 
         continue-on-error: true
         working-directory: terraform 
