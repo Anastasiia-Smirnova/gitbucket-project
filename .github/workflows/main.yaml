@@ -176,6 +176,7 @@ jobs:
       - name: Determine active Environment
         id: determine-env
         run: |
+          terraform workspace select ${APP_ENV}
           terraform output --json | jq .active_environment.value
           ACTIVE_ENV=$(terraform output --json | jq .active_environment.value)
           if [ "$ACTIVE_ENV" = "blue" ]; then
@@ -207,7 +208,8 @@ jobs:
       - name: Debug Outputs
         run: |
           echo "Terraform Outputs:"
-          terraform output -json
+          terraform workspace select ${APP_ENV}          
+          terraform output --json
         working-directory: terraform
 
       - name: Fetch Instance IPs
