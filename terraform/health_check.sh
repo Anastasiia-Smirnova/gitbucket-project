@@ -4,6 +4,7 @@ INSTANCES=("$@")
 
 health_check() {
   url=$1
+  url_port="${url}:8080"
   if curl -s --max-time 2 --fail $url; then
     echo "$url is up."
     return 0
