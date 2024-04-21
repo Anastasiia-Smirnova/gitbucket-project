@@ -173,7 +173,7 @@ jobs:
             })  
           working-directory: terraform
 
-      - name: Determine active Environment
+      - name: Determine active environment
         id: determine-env
         run: |
           terraform workspace select ${APP_ENV}
