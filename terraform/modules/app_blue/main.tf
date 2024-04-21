@@ -3,8 +3,9 @@ resource "aws_instance" "gitbucket_instance_blue" {
   ami                         = "ami-0f7204385566b32d0"
   instance_type               = "t2.micro"
   subnet_id                   = local.app_subnets[count.index]
-  security_groups             = [var.app_security_group_id]
-  iam_instance_profile        = var.instance_profile_name
+#  security_groups             = [var.app_security_group_id]
+  vpc_security_group_ids      = [var.app_security_group_id]
+  iam_instance_profile        = var.instance_profile_name  
   key_name                    = "gitbucket-ssh" 
   associate_public_ip_address = true
 
