@@ -177,8 +177,8 @@ jobs:
         id: determine-env
         run: |
           terraform workspace select ${APP_ENV}
-          terraform output --json | jq .active_environment.value | | tr -d '"' 
-          ACTIVE_ENV=$(terraform output --json | jq .active_environment.value | | tr -d '"')
+          terraform output --json | jq .active_environment.value | tr -d '"' 
+          ACTIVE_ENV=$(terraform output --json | jq .active_environment.value | tr -d '"')
           if [ "$ACTIVE_ENV" = "blue" ]; then
             OPPOSITE_ENV=green
             echo "OPPOSITE_ENV=green" >> $GITHUB_ENV
