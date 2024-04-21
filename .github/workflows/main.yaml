@@ -184,11 +184,13 @@ jobs:
           fi
 
           if [ "$ACTIVE_ENV" = "null"  ]; then
-            echo "ACTIVE_ENV=blue" >> $GITHUB_ENV 
+            echo "ACTIVE_ENV=blue" >> $GITHUB_ENV
+            echo "OPPOSITE_ENV=blue" >> $GITHUB_ENV
           else
             echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV   
           fi
-          echo "ACTIVE_ENV=${ACTIVE_ENV}"         
+          echo "ACTIVE_ENV=${ACTIVE_ENV}" 
+          echo "ACTIVE_ENV=${OPPOSITE_ENV}"     
 
       - name: Terraform Apply
         id: apply
