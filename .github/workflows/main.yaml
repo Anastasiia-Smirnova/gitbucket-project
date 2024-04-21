@@ -210,6 +210,7 @@ jobs:
         id: check
         run: |
           IFS=',' read -r -a instance_array <<< "${{ steps.get-ips.outputs.ips }}"
+          chmod 777 ./health_check.sh
           ./health_check.sh "${instance_array[@]}"
           if [ $? -eq 0 ]; then
             echo "Health check passed."
