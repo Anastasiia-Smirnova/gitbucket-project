@@ -190,7 +190,6 @@ jobs:
         run: |
           terraform workspace select ${APP_ENV}
           terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
-}"
         continue-on-error: true
         working-directory: terraform
 
