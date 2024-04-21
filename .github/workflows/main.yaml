@@ -173,7 +173,7 @@ jobs:
             })  
           working-directory: terraform
 
-      - name: Determine Active Environment
+      - name: Determine active Environment
         id: determine-env
         run: |
           ACTIVE_ENV=$(terraform output --json | jq .active_environment.value)
