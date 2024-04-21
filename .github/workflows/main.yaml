@@ -212,22 +212,17 @@ jobs:
           IFS=',' read -r -a instance_array <<< "${{ steps.get-ips.outputs.ips }}"
           echo $instance_array
           chmod 777 ./health_check.sh
-#          ./health_check.sh "${instance_array[@]}"
-#          if [ $? -eq 0 ]; then
-            echo "Health check passed."
+          echo "Health check passed."
 
-            if [ "$ACTIVE_ENV" == "blue" ]; then
-              INSTANCE_COUNT_VAR="instance_count_green=0"
-            else
-              INSTANCE_COUNT_VAR="instance_count_blue=0"
-            fi
+          if [ "$ACTIVE_ENV" == "blue" ]; then
+            INSTANCE_COUNT_VAR="instance_count_green=0"
+          else
+            INSTANCE_COUNT_VAR="instance_count_blue=0"
+          fi
              
-            echo "INSTANCE_COUNT_VAR: ${INSTANCE_COUNT_VAR}" 
-            terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="${INSTANCE_COUNT_VAR}"
+          echo "INSTANCE_COUNT_VAR: ${INSTANCE_COUNT_VAR}" 
+          terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="${INSTANCE_COUNT_VAR}"
 
-#          else
-#            echo "Health check failed, no changes applied." 
-#          fi  
         continue-on-error: true
         working-directory: terraform 
 
