@@ -188,7 +188,7 @@ jobs:
           else
             echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV   
           fi
-          echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV          
+          echo "ACTIVE_ENV=${ACTIVE_ENV}"         
 
       - name: Terraform Apply
         id: apply
