@@ -194,7 +194,8 @@ jobs:
             echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV   
           fi
           echo "ACTIVE_ENV=${ACTIVE_ENV}" 
-          echo "OPPOSITE_ENV=${OPPOSITE_ENV}"     
+          echo "OPPOSITE_ENV=${OPPOSITE_ENV}"  
+        working-directory: terraform    
 
       - name: Terraform Apply
         id: apply
