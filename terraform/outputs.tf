@@ -18,3 +18,6 @@ output "db_endpoint" {
   value = module.gitbucket_db.db_endpoint
 }
 
+output "active_environment" {
+  value = var.active_environment
+}

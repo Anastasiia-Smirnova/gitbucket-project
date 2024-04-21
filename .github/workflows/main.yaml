@@ -176,20 +176,26 @@ jobs:
       - name: Determine Active Environment
         id: determine-env
         run: |
-          chmod +x ./active_env.sh
-          ACTIVE_ENV=$(./active_env.sh)
+          ACTIVE_ENV=$(terraform output --json | jq .active_environment.value)
           if [ "$ACTIVE_ENV" = "blue" ]; then
             echo "OPPOSITE_ENV=green" >> $GITHUB_ENV
           else
             echo "OPPOSITE_ENV=blue" >> $GITHUB_ENV
+          fi
+
+          if [ "$ACTIVE_ENV" = "null"  ]; then
+            echo "ACTIVE_ENV=blue" >> $GITHUB_ENV 
+          else
+            echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV   
           fi
           echo "ACTIVE_ENV=${ACTIVE_ENV}" >> $GITHUB_ENV          
 
       - name: Terraform Apply
         id: apply
         run: |
+          echo "ACTIVE_ENV: ${ACTIVE_ENV}"
           terraform workspace select ${APP_ENV}
-          terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}"
+          terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="active_environment=${ACTIVE_ENV}"
         continue-on-error: true
         working-directory: terraform
 
@@ -202,7 +208,7 @@ jobs:
       - name: Fetch Instance IPs
         id: get-ips
         run: |
-          ACTIVE_ENV=$(../ansible/active_env.sh)
+          ACTIVE_ENV=$(terraform output --json | jq .active_environment.value)
           echo "ACTIVE_ENV=$ACTIVE_ENV"
 
           if [ "$ACTIVE_ENV" = "blue" ]; then
