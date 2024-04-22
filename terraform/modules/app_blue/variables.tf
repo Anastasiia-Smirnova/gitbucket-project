@@ -8,7 +8,7 @@ variable "instance_tag" {
 
 variable "instance_count_blue" {
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "vpc_id" {

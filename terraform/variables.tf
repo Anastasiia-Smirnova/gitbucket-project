@@ -10,10 +10,10 @@ variable "active_environment" {
 
 variable "instance_count_blue" {
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "instance_count_green" {
   type        = number
-  default     = 1
+  default     = 2
 }
