@@ -195,7 +195,7 @@ jobs:
           fi
           echo "ACTIVE_ENV=${ACTIVE_ENV}" 
           echo "OPPOSITE_ENV=${OPPOSITE_ENV}"  
-        working-directory: terraform    
+        working-directory: terraform
 
       - name: Terraform Apply
         id: apply
@@ -245,7 +245,7 @@ jobs:
           echo "Deploying to ${{ env.OPPOSITE_ENV }}"
           ansible-playbook -i ./inventory gitbucket_${{ env.OPPOSITE_ENV }}.yaml  -e "aws_region=$AWS_REGION aws_secret_access_key=$AWS_SECRET_ACCESS_KEY aws_access_key_id=$AWS_ACCESS_KEY_ID app_env=$APP_ENV github_run_number=${{ github.run_number }} db_url=$DB_URL db_user=$DB_USER db_password=$DB_PASSWORD"  
 
-      - name: Health check
+      - name: Health check & env switch
         id: check
         run: |
           IFS=',' read -r -a instance_array <<< "${{ steps.get-ips.outputs.ips }}"
@@ -260,10 +260,16 @@ jobs:
             else
               INSTANCE_COUNT_VAR="instance_count_green=0"
             fi
-            echo "INSTANCE_COUNT_VAR: ${INSTANCE_COUNT_VAR}" 
             terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="${INSTANCE_COUNT_VAR}"  -var="active_environment=${OPPOSITE_ENV}"
           else
             echo "Health check failed, no changes applied." 
+
+            if [ "$ACTIVE_ENV" == "blue" ]; then
+              INSTANCE_COUNT_VAR="instance_count_green=0"
+            else
+              INSTANCE_COUNT_VAR="instance_count_blue=0"
+            fi
+            terraform apply -auto-approve -no-color -var="gitbucket_version=${GITHUB_RUN_NUMBER}" -var="${INSTANCE_COUNT_VAR}"  -var="active_environment=${ACTIVE_ENV}"
           fi  
         continue-on-error: true
         working-directory: terraform 

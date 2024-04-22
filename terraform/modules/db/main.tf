@@ -20,8 +20,8 @@ resource "aws_db_instance" "gitbucket_mysql" {
   skip_final_snapshot  = var.db_skip_final_snapshot
   publicly_accessible  = var.db_publicly_accessible
 
-#  vpc_security_group_ids = [aws_security_group.gitbucket-database-sg.id]
-#  db_subnet_group_name = aws_db_subnet_group.gitbucket_dbsubnetgroup.name
+  backup_retention_period = 7 
+  backup_window           = "04:00-06:00"
 
   vpc_security_group_ids = [var.db_security_group_id]
   db_subnet_group_name = aws_db_subnet_group.gitbucket_dbsubnetgroup.name

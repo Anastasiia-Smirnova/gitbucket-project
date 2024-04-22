@@ -30,7 +30,6 @@ module "gitbucket_app_blue" {
   app_security_group_id   = module.gitbucket_network.app_security_group_id
   db_endpoint             = module.gitbucket_db.db_endpoint
   instance_count_blue     = var.instance_count_blue
-#  gitbucket_version       = var.gitbucket_version
 }
 
 module "gitbucket_app_green" {
@@ -47,5 +46,4 @@ module "gitbucket_app_green" {
   app_security_group_id   = module.gitbucket_network.app_security_group_id
   db_endpoint             = module.gitbucket_db.db_endpoint
   instance_count_green    = var.instance_count_green
-#  gitbucket_version       = var.gitbucket_version
 }

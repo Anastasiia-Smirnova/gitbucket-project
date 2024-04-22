@@ -2,11 +2,10 @@ plugin: amazon.aws.aws_ec2
 regions:
   - eu-central-1
 keyed_groups:
-  - prefix: '' # No prefix added to the group name
-    key: tags['Environment'] # Assuming both instances have an 'Environment' tag
-    separator: "" # No separator between prefix and key value
+  - prefix: ''
+    key: tags['Environment'] 
+    separator: "" 
 compose:
   ansible_host: public_ip_address
 host_vars:
   ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-#  ansible_python_interpreter: /usr/bin/python3.9

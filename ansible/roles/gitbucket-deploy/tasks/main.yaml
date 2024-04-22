@@ -58,10 +58,3 @@
     name: gitbucket
     state: started
     daemon_reload: true
-    
-
-
-#- name: Start Scala application
-#  ansible.builtin.shell: "nohup java -jar /opt/scala/gitbucket_{{ github_run_number }}.war > /var/log/gitbucket.log 2>&1 &"
-#  async: 15
-#  poll: 0

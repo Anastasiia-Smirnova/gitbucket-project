@@ -62,24 +62,6 @@ resource "aws_subnet" "gitbucket_datasubnet_02" {
   }
 }
 
-#resource "aws_network_interface" "gitbucket_network_interface_01" {
-#  subnet_id       = aws_subnet.gitbucket_appsubnet_01.id
-#  security_groups = [aws_security_group.gitbucket_appsrv_sg.id]
-#  
-#  tags = {
-#    Name = "${var.app_name}-${terraform.workspace}-network-interface-01"
-#  }
-#}
-
-#resource "aws_network_interface" "gitbucket_network_interface_02" {
-#  subnet_id       = aws_subnet.gitbucket_appsubnet_02.id
-#  security_groups = [aws_security_group.gitbucket_appsrv_sg.id]
-#  
-#  tags = {
-#    Name = "${var.app_name}-${terraform.workspace}-network-interface-02"
-#  }
-#}
-
 resource "aws_route_table" "gitbucket_publicRT" {
   vpc_id = aws_vpc.gitbucket_vpc.id
 

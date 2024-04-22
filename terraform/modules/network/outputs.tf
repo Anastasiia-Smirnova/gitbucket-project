@@ -33,11 +33,3 @@ output "db_subnet_01_id" {
 output "db_subnet_02_id" {
   value = aws_subnet.gitbucket_datasubnet_02.id
 }
-
-#output "gitbucket_network_interface_01_id" {
-#  value = aws_network_interface.gitbucket_network_interface_01.id
-#}
-
-#output "gitbucket_network_interface_02_id" {
-#  value = aws_network_interface.gitbucket_network_interface_02.id
-#}
